@@ -4,7 +4,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
 		<title>活动抽奖</title>
-		<script type='text/javascript'>
+		<script type="text/javascript">
 			var fromCanal = '-1';
 			if (false) {
 				parent = top = window;
@@ -209,7 +209,7 @@
 				<canvas id="outer">您的浏览器不支持canvas，请换一个牛逼一点的浏览器，谢谢</canvas>
 
 			</div>
-			<div class='gameInfoBox'>
+			<div class="gameInfoBox">
 				<div class="titleImg imgContainer absCenter titleDown">
 					<img id="titleImg" class="slaveImg abs" style="width:14.58422127390713rem;height:5.287846309837673rem;top:2.7292109986258954rem;left:0.7249466715100036rem;"
 					 src="image/ACgIABAEGAAg3Z210AUowNy7iAEwxAQ40gE.png" />
@@ -240,7 +240,7 @@
 			            <div class="item">活动说明</div>
 			        </div>
 			        <div id="prizeBtn" class="poupTitleMune">
-			            <div class="item">我的奖品<span id='Award_Round_Dot' class='redDot hide'></span></div>
+			            <div class="item">我的奖品<span id="Award_Round_Dot" class="redDot hide"></span></div>
 			        </div>
 			    </div>
 			    <div class="poupClose"></div>
@@ -332,7 +332,7 @@
 				<div id="giftbox"></div>
 				<div id="resule-gift-buttonMenu-bottom">
 					<div class="bottom-line">
-						<div class='resule-gift-home menuBack  greenBtn flowBtn'>返回</div>
+						<div class="resule-gift-home menuBack  greenBtn flowBtn">返回</div>
 					</div>
 				</div>
 			</div>
@@ -372,6 +372,7 @@
 			                hasTime=true;
 							$('#Area').val(res.obj[0].City);
 							$("#shopName").val(res.obj[0].List[0].ShopName)
+							shopid=res.obj[0].List[0].id
 						   var Cityindex=0;
 						   
 						   $("#Area").click(function(){
@@ -391,7 +392,8 @@
 							//    $('#shopName').val("");
 							//    $('#shopId').html("");
 								$("#shopName").val(res.obj[Cityindex].List[0].ShopName);
-								shopid=res.obj[Cityindex].List[0].Id
+								shopid=res.obj[Cityindex].List[0].id
+								console.log(shopid,"shopid**************")
 							   for(var j=0;j<res.obj[Cityindex].List.length;j++){
 								  	  shopItem+='<div class="item" data-id="'+res.obj[Cityindex].List[j].id+'">'+res.obj[Cityindex].List[j].ShopName+'</div>';
 								  } 
@@ -454,6 +456,11 @@
 			        msgTips("请输入正确的手机号");
 			        return false;
 			    }
+				code=$("#setword").val()
+				if(code == ''){
+					msgTips("请输入短信验证码")
+					return false
+				}
 			    $.ajax({
 			        type: "POST",
 			        url: "http://h5api.wtvxin.com/api/JoinActivities/GetJoinActivities?mobile="+phone+"&activityId="+activityId+"&shopid="+shopid+"&code="+code,
@@ -770,10 +777,8 @@
             canvas.setAttribute('width',canvas_width+'px');
             canvas.setAttribute('height',canvas_height+'px');
             canvas.width=canvas_width;
-            console.log("111111")
             context.fillStyle="rgba(100, 40, 40, 0.3)";
             context.fillRect(0,0,canvas_width,canvas_height);
-            console.log("2222222")
             var font = 0
             font = Math.floor(clientWidth*200/4000)
             for(var i=0;i<show_num.toString().length;i++){
@@ -819,67 +824,66 @@
             }
         
         }
-        function randomColor(){
-            //得到随机的颜色值
-            var r=Math.floor(Math.random()*256);
-            var g=Math.floor(Math.random()*256);
-            var b=Math.floor(Math.random()*256);
-            return "rgb("+r+","+g+","+b+")"
-        }
-        //发送验证码
-        $(".code-sj").click(function(){
-            console.log("9999999")
-            curCount1 = 59;
-            phone=$("#phone").val()
-            var r_phone = /^[1]+\d{10}/;
-            if (phone == "") {
-                msgTips("手机号不能为空");
-                return false;
-            }
-            if (!r_phone.test(phone)) {
-                msgTips(" 请输入正确的手机号");
-                return false;
-            }
-            //设置button效果，开始计时
-            $(".code-sj").attr("disabled", "true");
-            $(".code-sj").html(+curCount1 + "秒再获取");
-            InterValObj1 = window.setInterval(SetRemainTime1, 1000); //启动计时器，1秒执行一次
-            //向后台发送处理数据
-            getSmCode()
+			function randomColor(){
+				//得到随机的颜色值
+				var r=Math.floor(Math.random()*256);
+				var g=Math.floor(Math.random()*256);
+				var b=Math.floor(Math.random()*256);
+				return "rgb("+r+","+g+","+b+")"
+			}
+			//发送验证码
+			$(".code-sj").click(function(){
+				console.log("9999999")
+				curCount1 = 59;
+				phone=$("#phone").val()
+				var r_phone = /^[1]+\d{10}/;
+				if (phone == "") {
+					msgTips("手机号不能为空");
+					return false;
+				}
+				if (!r_phone.test(phone)) {
+					msgTips(" 请输入正确的手机号");
+					return false;
+				}
+				//设置button效果，开始计时
+				$(".code-sj").attr("disabled", "true");
+				$(".code-sj").html(+curCount1 + "秒再获取");
+				InterValObj1 = window.setInterval(SetRemainTime1, 1000); //启动计时器，1秒执行一次
+				//向后台发送处理数据
+				getSmCode()
 
-        });
-        function SetRemainTime1(){
-            if(curCount1 == 1){
-                window.clearInterval(InterValObj1); //停止计时器
-                $(".code-sj").removeAttr("disabled"); //启用按钮
-                $(".code-sj").text("重新发送");
-            }else{
-                console.log(curCount1,"ppppppp")
-                curCount1--;
-                $(".code-sj").text(+curCount1 + "秒再获取");
-            }
-        }
-        function getSmCode(){
-            $.ajax({
-                type: "POST",
-                url: "http://h5api.wtvxin.com/api/JoinActivities/GetSms?mobile="+phone+"&activityId="+activityId,
-                // data: {
-                //     mobile:"15927443397",
-                //     shopid:2
-                // },
-                success: function (res) {
-                    console.log(res)
-                    if(res.code==1){
-                        code=res.data;
-                        msgTips("获取成功")
-                    }else{
-                        msgTips("")
-                    }
-                }
-            })
-        }
-			
-		</script>
+			});
+			function SetRemainTime1(){
+				if(curCount1 == 1){
+					window.clearInterval(InterValObj1); //停止计时器
+					$(".code-sj").removeAttr("disabled"); //启用按钮
+					$(".code-sj").text("重新发送");
+				}else{
+					curCount1--;
+					$(".code-sj").text(+curCount1 + "秒再获取");
+				}
+			}
+			function getSmCode(){
+				$.ajax({
+					type: "POST",
+					url: "http://h5api.wtvxin.com/api/JoinActivities/GetSms?mobile="+phone+"&activityId="+activityId,
+					// data: {
+					//     mobile:"15927443397",
+					//     shopid:2
+					// },
+					success: function (res) {
+						console.log(res)
+						if(res.code==1){
+							code=res.data;
+							msgTips("获取成功")
+						}else{
+							msgTips("")
+						}
+					}
+				})
+			}
+				
+			</script>
 		
 	</body>
 </html>

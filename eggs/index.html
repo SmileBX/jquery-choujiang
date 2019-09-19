@@ -348,6 +348,11 @@
                 msgTips("请输入正确的手机号");
                 return false;
             }
+            code=$("#setword").val()
+            if(code == ''){
+                msgTips("请输入短信验证码")
+                return false
+            }
             $.ajax({
                 type: "POST",
                 url: "http://h5api.wtvxin.com/api/JoinActivities/GetJoinActivities?mobile="+phone+"&activityId="+activityId+"&shopid="+shopid+"&code="+code,
@@ -560,14 +565,11 @@
             canvas.setAttribute('width',canvas_width+'px');
             canvas.setAttribute('height',canvas_height+'px');
             canvas.width=canvas_width;
-            console.log("111111")
             context.fillStyle="rgba(100, 40, 40, 0.3)";
             context.fillRect(0,0,canvas_width,canvas_height);
-            console.log("2222222")
             var font = 0
             font = Math.floor(clientWidth*200/4000)
             for(var i=0;i<show_num.toString().length;i++){
-                console.log(i,"i///////////")
                 var deg=Math.random()*30*Math.PI/180;
                 var txt=show_num.toString().charAt(i);
                 console.log(txt,"txt")
@@ -644,7 +646,6 @@
                 $(".code-sj").removeAttr("disabled"); //启用按钮
                 $(".code-sj").text("重新发送");
             }else{
-                console.log(curCount1,"ppppppp")
                 curCount1--;
                 $(".code-sj").text(+curCount1 + "秒再获取");
             }
