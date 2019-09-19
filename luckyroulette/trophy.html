@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的中奖纪录</title>
+    <link rel="stylesheet" href="css/trophy.css">
+    <script src="./js/jquery.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        a{text-decoration:none;}
+        html,body{
+            background: url('./images/trophyBg.jpg')no-repeat;
+            background-size: 100% 100%;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="rules">
+            <!-- <span id="rules"><img src="./images/icon3.png" alt=""></span>
+            <div>活动规则</div> -->
+        </div>
+        <p class="number">13648573526</p>
+        <p>我的中奖纪录</p>
+    </div>
+    <div class="main">
+        <div class="trophy"><span>奖品</span><span>数量</span></div>
+        <div class="trophyList">
+            <!-- <div class="item">
+                <span>华为P30</span>
+                <span>2019-09-09 10:12:12</span>
+                <span>1</span>
+            </div> -->
+        </div>
+    </div>
+    <script>
+        (function(){
+            function resizeBaseFontSize(){
+                var rootHtml = document.documentElement,
+                    deviceWidth = rootHtml.clientWidth;
+                if(deviceWidth > 1024){
+                    deviceWidth = 1024;
+                }
+                rootHtml.style.fontSize = deviceWidth / 7.5 + "px";
+            }
+            resizeBaseFontSize();
+            window.addEventListener("resize", resizeBaseFontSize, false); //onresize 事件会在窗口或框架被调整大小时发生。
+            window.addEventListener("orientationchange", resizeBaseFontSize, false);  //屏幕旋转事件：onorientationchange
+        })();
+    </script>
+    <script type="text/javascript">
+        var activityId=getUrlParam("id");//获取链接携带活动id
+        var phone=getUrlParam("phone")
+        // var phone="15868306120"
+        $('.number').html(phone)
+        $(document).ready(function(){
+            $.ajax({
+                type: "POST",
+                url: "http://h5api.wtvxin.com/api/LotteryDraw/activityzjlb?moblie="+phone+"&activityId="+activityId,
+                data: {
+                    // activityId:2,
+                    //mobile:"15868306120"
+                },
+                // dataType:"json",
+                success: function (res) {
+                    if(res.code==0){
+                        res.ct.forEach(item => {
+                            item.Addtime=item.Addtime.replace(/T/g, " ").substr(0,19)
+                            let shopItem="<div class='item'><span>"+item.Jpname+"</span><span>"+item.Addtime+"</span><span>"+item.Amount+"</span></div>"
+                            $('.trophyList').append(shopItem)
+                        });
+                    }else{
+                        let shopItem="<p class='item'>您目前暂无奖品，马上去试试手气吧！</p>"
+                        $('.trophyList').append(shopItem)
+                    }
+                }
+            })
+        })
+        $("#rules").click(function(){
+            location.href ="rules.html?id="+activityId+"&phone="+phone;
+        });
+        //获取链接参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var url = window.location.search.substr(1); //.toLowerCase();
+            var r = url.match(reg);
+            if(r != null) return unescape(r[2]);
+            return null;
+        }
+    </script>
+</body>
+</html>

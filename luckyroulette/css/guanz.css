@@ -1,0 +1,146 @@
+#fly_page{
+	height:100%;
+	text-align:center;
+	position: fixed;
+}
+#fly_pages{
+	text-align:center;
+	background:#fff;
+	border-radius: 10px;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+strong {
+	font-weight: bold;
+}
+a, button, input {
+	-webkit-tap-highlight-color: rgba(255,0,0,0);
+	outline: none;
+}
+input, textarea, select {
+	-webkit-border-radius: 0;
+	-webkit-appearance: none;
+	outline: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+img {
+	border: 0;
+	max-width: 100%;
+}
+a {
+	text-decoration: none;
+	color: #333;
+}
+a:hover {
+	text-decoration: none;
+}
+.clearfix:before, .container:after {
+	content: "";
+	display: table;
+}
+.clearfix:after {
+	clear: both;
+}
+/**/
+/*#fly_page{
+	color: #666666;
+	background-color: #42424E;
+	height: 100%;
+	width: 100%
+}*/
+.pwd {
+	padding: 4px 10px 0px 10px
+}
+.pwd p{
+	color:#888888;
+}
+.pwpage h1 {
+	font-size: 15px;
+	text-align: center;
+	margin: 5px 0 5px 0;
+	color: #ff5b35
+}
+.pwpage input {
+	box-sizing: border-box;
+    height: 34px;
+    padding: 12px 0 12px 34px;
+    border: 0;
+    color: #8a8a8a;
+    border-radius: 5px;
+    width: 85%;
+    font-family: Microsoft YaHei,Helvitica,Verdana,Tohoma,Arial,san-serif;
+    font-size: 14px;
+    border: 1px #707070 solid;
+}
+.pwpage #realname {
+	background: url(../images/user.png) no-repeat 4px center;
+	background-size: 20px 20px;
+}
+.pwpage #phone {
+	background: url(../images/phone.png) no-repeat 4px center;
+	background-size: 20px 20px;
+}
+.pwpage #address {
+	background: url(../images/address.png) no-repeat 4px center;
+	background-size: 20px 20px;
+}
+.pwpage button {
+	width: 20%;
+    background-color: #f36c2a;
+    height: 27px;
+    border: 1px solid #f36c2a;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    color: white;
+}
+.pwpage .erweima {
+	width: 68%;
+	vertical-align: middle;
+	display: inline-block;
+}
+.pwpage .erweimas {
+	vertical-align: middle;
+	display: inline-block;
+}
+.pwpage .title {
+	font-size: 14px;
+	line-height: 1.3;
+}
+.pwpage .key {
+	font-size: 14px;
+	color: #ff5b35;
+	margin-top: 5px;
+}
+.px {
+	display: block;
+	height: 35px;
+	line-height: 35px;
+	font-size: 14px;
+	background-color: #F00303;
+	text-decoration: none;
+	border-radius: 5px;
+	color: #ffffff;
+	text-align: center;
+	width: 220px;
+	margin: 5px auto 15px;
+}
+.px:active {
+	background-color: #C70000;
+}
+#wxsub{
+	font-size: 15px;
+	width: 70%;
+	margin-left: 15%;
+	border-radius: 5px;
+}

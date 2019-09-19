@@ -1,0 +1,698 @@
+﻿
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+    <meta content="yes" name="full-screen" />
+    <meta content="true" name="x5-fullscreen" />
+    <meta content="application" name="browsermode" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="css/main.css?v=1.0.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/winDialog.css?v=1.0.0">
+    <link rel="stylesheet" href="css/index.css?v=1.0.0">
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+    <script type="text/javascript" src="js/jquery.js?v=1.0.0"></script>
+    <title>砸金蛋</title>
+    <style>
+        img {
+            max-width: 100% !important;
+        }
+        .ui-dialog-wrap header h2 .hit-again-wrap i {
+            top: -20px;
+        }
+        .instro-wall article h6 {
+            font-size: 15px;
+        }
+        @-webkit-keyframes rotation {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+        .Rotation {
+            -webkit-transform: rotate(360deg);
+            animation: rotation 3s linear infinite;
+            -moz-animation: rotation 3s linear infinite;
+            -webkit-animation: rotation 3s linear infinite;
+            -o-animation: rotation 3s linear infinite;
+        }
+
+        .ui-dialog-wrap footer .btn-verify {
+            background: -webkit-linear-gradient(top,#e85930,#a33322);
+            box-shadow: inset 0 1px 0 0 #e64b12;
+        }
+        .mask{
+            background:rgba(0,0,0,0.8);
+            background:-webkit-rgba(0,0,0,0.8);
+            width:100%;
+            height:100%;
+            top:0px;
+            left:0px;
+            z-index:1000; 
+            position:fixed;
+            display:block; 
+            overflow-x:hidden
+        }
+        .load{
+            z-index:9999999999999999999;
+            position:fixed;
+            display:block; 
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+            width:1.5rem;
+            height:1.5rem;
+        }
+        .load img{
+            width:100%;
+            height:100%;
+        }
+    </style>
+</head>
+<body onselectstart="return true;" ondragstart="return false;" style="overflow-x: hidden;">
+    <input id="shareFlag" type="hidden" value="1" />
+    <div class="container">
+        <div style="position: fixed;top: 3%;left:82%;z-index: 10;" onclick="muted('bgAudio')">
+            <img id="playmusic" class="Rotation" style="width:50%;display:block;" src="images/play.png?v=1.0.0" />
+        </div>
+        <!--活动结束时，隐藏stage-->
+        <section class="stage">
+            <img src="images/stage.jpg" />
+            <!--金蛋-->
+            <div class="goldenEgg Egg1" onclick="zaidan(1)">
+                <img src="./images/egg.png" alt="" id="egg1">
+                <img src="./images/9.png" alt="" id="boom1">
+                <img src="images/1.png" id="czi1" class="czi main_jb2"/>
+            </div>
+            <div class="goldenEgg Egg2" onclick="zaidan(2)">
+                <img src="./images/egg.png" alt="" id="egg2">
+                <img src="./images/9.png" alt="" id="boom2">
+                <img src="images/1.png" id="czi2" class="czi"/>
+            </div>
+            <div class="goldenEgg Egg3" onclick="zaidan(3)">
+                <img src="./images/egg.png" alt="" id="egg3">
+                <img src="./images/9.png" alt="" id="boom3">
+                <img src="images/1.png" id="czi3" class="czi"/>
+            </div>
+            <canvas id="canvastxt" width="640" height="459" style="width: 100%; display: none; top: 112px; position: absolute;"></canvas>
+            <!--锤子-->
+            <div class="hit" id="J_Hit"><img src="images/1.png" /></div>
+            <audio src="music/hit.mp3" id="J_HitAudio"></audio>
+            <!-- 背景音乐 -->
+            <!-- <audio id="bgAudio" type="audio/mpeg" src="music/default.mp3" loop="loop" hidden="true" autostart="true" autoplay="autoplay" ></audio> -->
+            <audio id="bgAudio" type="audio/mpeg" src="music/default.mp3" loop="loop" autostart="true" autoplay="autoplay"></audio>
+        </section>
+        <section class="wall-wrap">
+            <div class="instro-wall">
+                <!-- <h2>参与人数：<em>2004</em>人</h2> -->
+                <!--参与次数-->
+                <!-- <article>
+                    <h6>参与次数</h6>
+                    <div class="content">
+                        <p>
+                            您总共还可以抽奖
+                            <span id="awardsNumCurr">1</span>次<br>
+
+                            您今日还可以抽奖
+                            <span id="remainNumDayCurr">
+                                0
+                            </span>次
+                        </p>
+                        <span id="shareGetNum">
+                        </span>
+                    </div>
+                </article> -->
+                <!--活动说明-->
+                <article>
+                    <h6>活动说明</h6>
+                    <!--<h6>活动结束说明</h6>-->
+                    <div class="content" id="rulestxt">
+                        <!-- <p>一、活动时间</p>
+                        <p>2016年1月1日至2016年12月31日</p></p>
+                        <p>二、抽奖方式</p><p>每人每天可抽3次。</p>
+                        <p>三、兑奖须知</p>
+                        <p>1、用户中奖后请点击领奖，填写姓名、电话、地址，或进入“我的奖品”页面点击兑奖填写。</p>
+                        <p>2、奖品将在10日内送出，到货以实际时间为准。</p>
+                        <p>3、本活动由捷微H5平台提供技术支持，最终解释权归活动主办方所有。</p><p><br /></p> -->
+                    </div>
+                </article>
+                <!--活动奖项-->
+                <!-- <article>
+                    <h6>活动奖项</h6>
+                    <div class="content">
+                        <ul class="prize-list fn-clear">
+                            <li>
+                                <figure>
+                                    <span>一等奖</span>
+                                    <img src="images/default_image.png">
+                                </figure>
+                                <span>iPhone6s(测试)</span>
+                            </li>
+                            <li>
+                                <figure>
+                                    <span>二等奖</span>
+                                    <img src="images/default_image.png" />
+                                </figure>
+                                <span>华为mate8(测试)</span>
+                            </li>
+                            <li>
+                                <figure>
+                                    <span>三等奖</span>
+                                    <img src="images/default_image.png" />
+                                </figure>
+                                <span>智能手表(测试)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </article> -->
+                <!--中奖记录-->
+                <article>
+                    <h6>中奖记录</h6>
+                    <div class="content">
+                        <table class="win-table">
+                            <tbody class="trophyList">
+                                <!-- <tr>
+                                    <td>sdfsd 地方</td>
+                                    <td>华为</td>
+                                    <td>2016-06-13 14:15</td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+        </section>
+        <footer>
+            <a href="#" class="copyright"></a>
+        </footer>
+    </div>
+    <!-- 砸蛋完了之后的提示 -->
+    <div class="ui-dialog" id="J_Dialog" style="z-index: 1001;">
+        <div class="ui-dialog-wrap">
+            <header>
+                <span id="commonTitle">提示</span>
+                <h2>
+                    <div class="h-wrap" id="receive1-head">
+                        <!-- <p class="jpid">一等奖</p>
+                        <p class="jpname">洗衣机</p> -->
+                    </div>
+                </h2>
+            </header>
+            <section></section>
+            <footer><button id="draw">确 定</button></footer>
+        </div>
+    </div>
+    <!-- 填写信息 -->
+    <div id="receive3" class="win1">
+        <div class="box3">
+            <div style="position:relative" id="siteBox">
+                <div class="sj"></div>
+                <div id="siteId"></div>
+                <div class="info shop"><span>地  区：</span><input type="text" readonly="readonly" id="siteName"></div>
+            </div>
+            <div style="position:relative" id="shopBox" >
+                <div class="sj"></div>
+                <div id="shopId"></div>
+                <div class="info"><span>店  铺：</span><input type="text" readonly="readonly" id="shopName"></div>
+            </div>
+            <!----图形-->
+            <!-- <div class="info right">
+                <canvas id="canvas" width="136" height="30"></canvas>
+            </div> -->
+            <!---图形end-->
+            <div style="position:relative;display:none" id="" >
+                <div class="si-pic" style="padding:0">
+                    <canvas id="canvas" width="80" height="29"></canvas>
+                </div>
+                <div class="info"><span>图形码：</span><input type="number" name="" id="picture"></div>
+            </div>
+            <!-- <div class="info" style="margin-top:0.2rem"><span>图形码：</span><input type="number" name="" id="picture"></div> -->
+            <div class="info"><span>手机号：</span><input type="number" name="" id="phone"></div>
+            <div style="position:relative" id="code" >
+                <button class="code-sj">获取验证码</button>
+                <div class="info"><span>验证码：</span><input type="number" id="setword"></div>
+            </div>
+            <!-- <div class="info"><span>验证码：</span><input type="number" name="" id="setword"></div> -->
+            <button id="submit">确 定</button>
+        </div>
+    </div>
+    <!---遮罩层-->
+    <div class="mask">
+        <div class="load">
+            <img src="./images/load.gif" alt="">
+        </div>
+    </div>
+
+    <script src="layer.m/layer.js"></script>
+    <script src="layer.m/layerfun.js"></script>
+    <script>
+        (function(){
+            function resizeBaseFontSize(){
+                var rootHtml = document.documentElement,
+                    deviceWidth = rootHtml.clientWidth;
+                if(deviceWidth > 1024){
+                    deviceWidth = 1024;
+                }
+                rootHtml.style.fontSize = deviceWidth / 7.5 + "px";
+            }
+            resizeBaseFontSize();
+            window.addEventListener("resize", resizeBaseFontSize, false); //onresize 事件会在窗口或框架被调整大小时发生。
+            window.addEventListener("orientationchange", resizeBaseFontSize, false);  //屏幕旋转事件：onorientationchange
+        })();
+    </script>
+    <script type="text/javascript">
+        var shopid="";
+        var phone="";
+        var shopList=[];
+        var activityId="";//活动id
+        var dataList = []
+        var siteList = [];//地区列表
+        var hasTime=false;//活动是否正在进行，有无过期
+        var hasChance=false;//是否可以抽奖
+        var InterValObj1 = null
+        var curCount1 = "" //验证码倒计时
+        var code="";//短信验证码
+        $(document).ready(function(){
+            show(6352)
+            activityId=getUrlParam("id");//获取链接携带活动id
+            // activityId=3;
+            getRules();
+            $.ajax({
+                type: "POST",
+                url: "http://h5api.wtvxin.com/api/Activity/GetActivity?id="+activityId,
+                data: {
+                    // id:2
+                },
+                // dataType:"json",
+                success: function (res) {
+                    if(res.code==0){
+                        document.title=res.title
+                        hasTime=true;
+                        $("#shopName").val(res.obj[0].List[0].ShopName)
+                        shopid=res.obj[0].List[0].id
+                        $("#siteName").val(res.obj[0].City)//..
+                        dataList=res.obj
+                        shopList = res.obj[0].List
+                        console.log(shopList,'res.obj[0].List[0]')
+                        let siteObj = {}
+                        let id = 0
+                        res.obj.forEach(item=>{
+                            siteObj = {
+                                Id: id++,
+                                City:item.City
+                            }
+                            siteList.push(siteObj)
+                        })
+                        console.log(siteList,"site")
+                        siteList.map(item=>{
+                            let siteItem = "<div onclick='selectSite("+item.Id+")' style='font-size:0.3rem'>"+item.City+"</div>"
+                            $('#siteId').append(siteItem)
+                        })
+                       
+                        shopList.forEach(item => {
+                            let shopItem="<div onclick='selectShop("+item.id+")'>"+item.ShopName+"</div>"
+                            $('#shopId').append(shopItem)
+                        });
+                        $(".mask").hide()
+                        // if(res.data){
+                        //     $("html,body").css("background-image","url("+res.data+")");
+                        // }
+
+                    }else{
+                        hasTime=false;
+                        msgTips("很遗憾，本次活动已结束！")
+                        $(".mask").hide()
+                    }
+                }
+            })
+        })
+        //提交信息
+        $("#submit").click(function(){
+            phone=$("#phone").val()
+            var r_phone = /^[1]+\d{10}/;
+            if (phone == "") {
+                msgTips("手机号不能为空");
+                return false;
+            }
+            if (!r_phone.test(phone)) {
+                msgTips("请输入正确的手机号");
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "http://h5api.wtvxin.com/api/JoinActivities/GetJoinActivities?mobile="+phone+"&activityId="+activityId+"&shopid="+shopid+"&code="+code,
+                // data: {
+                //     mobile:"15927443397",
+                //     shopid:2
+                // },
+                success: function (res) {
+                    $('#receive3').hide();
+                    console.log(res)
+                    if(res.code==0){
+                        hasChance=true;
+                        msgTips("恭喜您成功获得次抽奖机会,马上试试手气吧！")
+                    }else{
+                        msgTips("很遗憾，您的抽奖次数已用完！")
+                    }
+                    console.log(hasChance)
+                }
+            })
+        });
+        //选择店柜
+        function selectShop(id){
+            event.stopPropagation()   
+            console.log(id)
+            shopid=id;
+            shopList.forEach(item => {
+                if(item.id==shopid){
+                    $("#shopName").val(item.ShopName);
+                    console.log(item.ShopName)
+                    $('#shopId').hide();
+                }
+            });
+            
+        }
+        $("#draw").click(function(){
+            $('#J_Dialog').hide();
+            mylist()
+        });
+        //我的中奖纪录
+        function mylist(){
+            $.ajax({
+                type: "POST",
+                url: "http://h5api.wtvxin.com/api/LotteryDraw/activityzjlb?moblie="+phone+"&activityId="+activityId,
+                data: {
+                    // activityId:2,
+                    //mobile:"15868306120"
+                },
+                // dataType:"json",
+                success: function (res) {
+                    let html=""
+                    if(res.code==0){
+                        $('.trophyList').empty()
+                        res.ct.forEach(item => {
+                            item.Addtime=item.Addtime.replace(/T/g, " ").substr(0,19)
+                            html += '<tr>';
+                            html += '<td>' + item.Jpname + '</td>';
+                            html += '<td>' + item.Addtime + '</td>';
+                            html += '<td>' + item.Amount + '</td>';
+                            html += '</tr>';
+                        });
+                        $('.trophyList').append(html)
+                    }else{
+                        $('.trophyList').empty()
+                        let html="<p class='item'>您目前暂无奖品，马上去试试手气吧！</p>"
+                        $('.trophyList').append(html)
+                    }
+                }
+            })
+        }
+        $("#shopBox").click(function(){
+            console.log("111111")
+            $('#shopId').show();
+        });
+        //选择地区
+        function selectSite(i){
+           event.stopPropagation()   
+            console.log(i)
+            $('#shopId').empty()
+            siteList.forEach(item => {
+                if(item.Id==i){
+                    $("#siteName").val(item.City);
+                    console.log(item.City)
+                    $('#siteId').hide();
+                    dataList.map(value=>{
+                        console.log(value)
+                        if(value.City == item.City){
+                                shopList =value.List
+                                $("#shopName").val(shopList[0].ShopName);
+                                shopid=shopList[0].Id
+                                shopList.forEach(item => {
+                                let shopItem="<div onclick='selectShop("+item.id+")'>"+item.ShopName+"</div>"
+                                $('#shopId').append(shopItem)
+                            });
+                        }
+                    })
+                    console.log(shopList,"shopList")
+                    
+                }
+            });
+            
+        }
+        $("#siteBox").click(function(){
+            console.log("111111")
+            $('#siteId').toggle();
+        });
+        //规则
+        function getRules(){
+            $.ajax({
+                type: "POST",
+                url: "http://h5api.wtvxin.com/api/LotteryDraw/activitygz?activityId="+activityId,
+                data: {
+                    // id:2
+                },
+                // dataType:"json",
+                success: function (res) {
+                    if(res.code==0){
+                        $('#rulestxt').append(res.Content)
+                    }
+                }
+            })
+        }
+        //抽奖
+        function zaidan(id){
+            if(hasTime){
+                if(hasTime&&hasChance){
+                    var czclass="#czi"+id;console.log(czclass)
+                    var eggclass="#egg"+id
+                    var boom="#boom"+id
+                    $(czclass).show()
+                    $(czclass).addClass("main_jb2");
+                    setTimeout(function() { 
+                        $(czclass).removeClass("main_jb2");
+                        $(eggclass).attr('src',"./images/egg2.png");
+                        $(czclass).hide()
+                        $(boom).show()
+                    }, 1000);
+                    setTimeout(function() { 
+                        $('#J_Dialog').show();
+                        $(boom).hide()
+                        $(eggclass).attr('src',"./images/egg.png");
+                    }, 2000);
+                    $.ajax({
+                        type: "POST",
+                        url: "http://h5api.wtvxin.com/api/LotteryDraw/Lotterydraw?mobile="+phone+"&activityId="+activityId+"&shopid="+shopid+"&code="+code,
+                        // data: {
+                        //     mobile:"15927443397",
+                        //     shopid:2
+                        // },
+                        success: function (res) {
+                            console.log(res)
+                            if(res.code==0){
+                                $('#receive1-head').empty()
+                                console.log($('#receive1-head').innerHTML,"*///////**")
+                                let shopItem=""
+                                // shopItem="<p>"+res.price.Grade+"</P><p>"+res.price.Title+"</p>"
+                                shopItem="<p></P><p>"+res.price.Title+"</p>"
+                                $('#receive1-head').append(shopItem);
+                                console.log(shopItem,"*******")
+                            }else if(res.code==4){
+                                msgTips("很遗憾，您的抽奖次数已用完！")
+                                phone="";
+                                hasChance=false
+                            }else{
+                                let shopItem="<p>很遗憾</P><p>本次未中奖！</p>"
+                                $('#receive1-head').empty()
+                                console.log($('#receive1-head').innerHTML,"----------")
+                                $('#receive1-head').append(shopItem)
+                                $('#receive1-text').hide();
+                            }
+                            console.log(hasChance)
+                        }
+                    })
+                }else{
+                    $('#receive3').show();
+                }
+            }else{
+                msgTips("很遗憾，本次活动已结束！")
+            }
+        };
+        function msgTips(msg) {
+            layer.open({
+                content: "<span style=\"font-size: .32rem;\">" + msg + "</span>",
+                skin: 'msg',
+                time: 3 //2秒后自动关闭
+            });
+        }
+        //获取链接参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var url = window.location.search.substr(1); //.toLowerCase();
+            var r = url.match(reg);
+            if(r != null) return unescape(r[2]);
+            return null;
+        }
+        //图形验证码
+        function show(show_num){
+            // show_num = 4
+            console.log(show_num.toString().length,"//////////////")
+            // var canvas_width=$("#canvas").width();
+            // var canvas_height=$("#canvas").height();
+            var canvas=document.getElementById("canvas");
+            var context=canvas.getContext("2d");
+            canvas.width=canvas_width;
+
+            //获取屏幕的宽度
+            var clientWidth = document.documentElement.clientWidth;
+            console.log(clientWidth,"clientWidth/////")
+            var canvas_width = Math.floor(clientWidth*200/1000);
+            var canvas_height = Math.floor(clientWidth*200/2500);
+            canvas.setAttribute('width',canvas_width+'px');
+            canvas.setAttribute('height',canvas_height+'px');
+            canvas.width=canvas_width;
+            console.log("111111")
+            context.fillStyle="rgba(100, 40, 40, 0.3)";
+            context.fillRect(0,0,canvas_width,canvas_height);
+            console.log("2222222")
+            var font = 0
+            font = Math.floor(clientWidth*200/4000)
+            for(var i=0;i<show_num.toString().length;i++){
+                console.log(i,"i///////////")
+                var deg=Math.random()*30*Math.PI/180;
+                var txt=show_num.toString().charAt(i);
+                console.log(txt,"txt")
+                // var x=i*18+10;//文字在canvas上x坐标
+                 var x=i*font+10;//文字在canvas上x坐标
+                var y=Math.random()*3;//文字在canvas上y坐标
+                
+                // context.font="bold 18px 微软雅黑";
+                context.font="bold"+" "+ font+"px"+" 微软雅黑";
+                context.translate(x,y);
+                context.rotate(deg);
+                
+                context.fillStyle=randomColor();
+                // context.fillStyle="#ff0000";
+                context.fillText(txt,0,font);
+        
+                context.rotate(-deg);
+                context.translate(-x,-y);        
+            }
+        
+            for(var i=0;i<=4;i++){
+                //验证码上显示线条
+                context.strokeStyle=randomColor();
+                context.beginPath();
+                context.moveTo(Math.random()*canvas_width,Math.random()*canvas_height);
+                context.lineTo(Math.random()*canvas_width,Math.random()*canvas_height);
+                context.stroke();
+            }
+        
+            for(var i=0;i<=30;i++){
+                //验证码上显示小点
+                context.strokeStyle=randomColor();
+                context.beginPath();
+                var x=Math.random()*canvas_width;
+                var y=Math.random()*canvas_height;
+                context.moveTo(x,y);
+                context.lineTo(x+1,y+1);
+                context.stroke();
+            }
+        
+        }
+        function randomColor(){
+            //得到随机的颜色值
+            var r=Math.floor(Math.random()*256);
+            var g=Math.floor(Math.random()*256);
+            var b=Math.floor(Math.random()*256);
+            return "rgb("+r+","+g+","+b+")"
+        }
+        //发送验证码
+        $(".code-sj").click(function(){
+            console.log("9999999")
+            curCount1 = 59;
+            phone=$("#phone").val()
+            var r_phone = /^[1]+\d{10}/;
+            if (phone == "") {
+                msgTips("手机号不能为空");
+                return false;
+            }
+            if (!r_phone.test(phone)) {
+                msgTips(" 请输入正确的手机号");
+                return false;
+            }
+            //设置button效果，开始计时
+            $(".code-sj").attr("disabled", "true");
+            $(".code-sj").html(+curCount1 + "秒再获取");
+            InterValObj1 = window.setInterval(SetRemainTime1, 1000); //启动计时器，1秒执行一次
+            //向后台发送处理数据
+            getSmCode()
+
+        });
+        function SetRemainTime1(){
+            if(curCount1 == 1){
+                window.clearInterval(InterValObj1); //停止计时器
+                $(".code-sj").removeAttr("disabled"); //启用按钮
+                $(".code-sj").text("重新发送");
+            }else{
+                console.log(curCount1,"ppppppp")
+                curCount1--;
+                $(".code-sj").text(+curCount1 + "秒再获取");
+            }
+        }
+        function getSmCode(){
+            $.ajax({
+                type: "POST",
+                url: "http://h5api.wtvxin.com/api/JoinActivities/GetSms?mobile="+phone+"&activityId="+activityId,
+                // data: {
+                //     mobile:"15927443397",
+                //     shopid:2
+                // },
+                success: function (res) {
+                    console.log(res)
+                    if(res.code==1){
+                        code=res.data;
+                        msgTips("获取成功")
+                    }else{
+                        msgTips("")
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+<script type="text/javascript">
+    function muted(id) {
+        var audio = document.getElementById(id);
+        if (audio.muted) {
+            audio.muted = false;
+            $("#playmusic").attr("src", "images/play.png");
+            $("#playmusic").addClass("Rotation");
+        } else {
+            audio.muted = true;
+            $("#playmusic").attr("src", "images/pause.png");
+            $("#playmusic").removeClass("Rotation");
+        }
+    }
+    $(function () {
+        var audio = document.getElementById('bgAudio');
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState == 'hidden') {
+                audio.muted = true;
+                $("#playmusic").attr("src", "images/pause.png");
+                $("#playmusic").removeClass("Rotation");
+            }
+        });
+    })
+</script>
+</html>
+

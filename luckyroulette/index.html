@@ -1,0 +1,620 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport"/>
+    <meta content="yes" name="full-screen"/>
+    <meta content="true" name="x5-fullscreen"/>
+    <meta content="application" name="browsermode"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/index.css?v=1.0.1">
+    <link rel="stylesheet" type="text/css" href="css/liMarquee.css?v=1.0.1">
+    <link rel="stylesheet" type="text/css" href="css/idangerous.swiper.css?v=1.0.1">
+    <link rel="stylesheet" type="text/css" href="css/fans.css?v=1.0.1">
+    <link rel="stylesheet" type="text/css" href="css/guanz.css?v=1.0.1">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <script src="js/wxcheck.js?v=1.0.1" type="text/javascript"></script>
+    <script src="js/jquery.js?v=1.0.1" type="text/javascript"></script>
+    <script src="js/jquery.rotate.min.js?v=1.0.1" type="text/javascript"></script>
+    <script src="js/idangerous.swiper.min.js?v=1.0.1" type="text/javascript"></script>
+    <script src="layer.m/layer.js"></script>
+    <script src="layer.m/layerfun.js"></script>
+    <script src="js/common.js?v=1.0.1" type="text/javascript"></script>
+    <script src="js/jquery.liMarquee.js?v=1.0.1"></script>
+    <title>大转盘</title>
+    <style>
+        html,body{
+            background: url('./images/bg.jpg')no-repeat;
+            background-size: 100% 100%;
+            width: 100%;
+            height: 100%;
+        }
+        .mask{
+            background:rgba(0,0,0,0.8);
+            background:-webkit-rgba(0,0,0,0.8);
+            width:100%;
+            height:100%;
+            top:0px;
+            left:0px;
+            z-index:1000; 
+            position:fixed;
+            display:block; 
+            overflow-x:hidden
+        }
+        .load{
+            z-index:9999999999999999999;
+            position:fixed;
+            display:block; 
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+            width:1.5rem;
+            height:1.5rem;
+        }
+        .load img{
+            width:100%;
+            height:100%;
+        }
+    </style>
+</head>
+<body>
+    <input type="hidden" value="oDltNwURr6RJkuF3QCUxsuEFJHOA" id="openid" />
+    <input type="hidden" value="gh_f268aa85d1c7" id="jwid" />
+    <input type="hidden" value="ff80808157ac8ecc0157ada5bcb20070" id="actId" />
+    <input type="hidden" value="" id="utoken" />
+    <input type="hidden" value="" id="basePath" />
+    <input type="hidden" value="1" id="shareFlag" />
+    <input type="hidden" value="0" id="countFlag" />
+    <div class="hdzp_warp" style="height:100vh;">
+        <!-- <div class="hdzp_warp hdzp_img_wdith" style="display: none"><img src="images/bg.jpg" style="height:100vh;" /></div> -->
+        <!--内容-->
+        <div class="hdzp_nr" style="z-index: 11">
+            <div class="hdzp_nr_width">
+                <!-- <div class="hdzp_top">活动时间：2018年10月10日-10月11日</div> -->
+                <div class="title_img hdzp_img_wdith"><img src="images/title.png?v=1.0.1" /></div>
+                <!--转盘-->
+                <div class="g-content">
+                    <div class="g-lottery-case">
+                        <div class="g-left">
+                            <div class="g-lottery-box" style="background:url(images/ly-plate-e.png) no-repeat;	background-size:97%;">
+                                <div class="g-lottery-img">
+                                    <a class="playbtn" id="playbtn" href="javascript:;" title="开始抽奖"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--转盘 end-->
+                <!--底部文字介绍-->
+                <div class="hdzp_word_js clearfix" style="padding:0 20px;box-sizing:border-box;">
+                    <a href="javascript:popup('detail')" class="hdzp_img_wdith"><img src="images/hdxq_img.png" /></a>
+                    <div class="hdzp_wz_js" style="margin-top:1.2rem">
+                        <!-- <p class="yy">已有<span>7425</span>人参与</p> -->
+                        <p class="cjjj" style="margin-top:0rem">
+                            <!-- 您还有<span id="playnumId">2</span>次抽奖机会 -->
+                        </p>
+                        <span id="playnum" style="display:none">
+                            2
+                        </span>
+                    </div>
+                    <div class="hdzp_img_wdith wdjp_img" style="margin-top: -0.3rem;" id="trophy"><img src="images/wdjp_img2.png" /></div>
+                </div>
+                <!--底部文字介绍 end-->
+            </div>
+        </div>
+        <!--内容 end-->
+    </div>
+    <!--活动内容-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="detail" onclick="popuphide('detail')">
+        <div class="bombs7  fail1" style=" ">
+            <div class="inputcontent7">
+                <div class="tstk_conter">
+                    <div class="hdzp_hdnr">
+                        <ul class="clearfix" id="contentText" style="margin-top: 2rem;color:#fff">
+                            <ul>
+                                <li><p class="hdzp_title">一、活动时间：</p><p class="hdzp_col_left">2018年10月10日-10月11日</p></li>
+                            </ul> -->
+                        </ul>
+                        <div style="height:2rem"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--分享-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="fxpy" onclick="popuphide('fxpy')">
+        <div class="bombs7  fail1">
+            <div class="inputcontent7">
+                <div class="tstk_conter">
+                    <div class="index_fxpyq"><img src="images/fxpyq_img.png" /></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--抽奖次数用完-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="runoutnum" onclick="popuphide('runoutnum')">
+        <div class="bombs7  fail1">
+            <div class="inputcontent7">
+                <div class="tstk_conter">
+                    <div class="csyw_img"><img src="images/csyw_img.png" /></div>
+                    <div class="csyw_word">
+                        今日抽奖次数已用完<br />明日再来吧
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--没有奖品-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="noawards" onclick="popuphide('noawards')">
+        <div class="bombs7  fail1" style="top:20%">
+            <div class="inputcontent7">
+                <div class="tstk_conter">
+                    <div class="csyw_img"><img src="images/csyw_img.png" /></div>
+                    <div class="csyw_word">
+                        还没有抽取到任何奖品<br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--抽奖总次数用完-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="runoutcountnum" onclick="popuphide('runoutcountnum')">
+        <div class="bombs7  fail1">
+            <div class="inputcontent7">
+                <div class="tstk_conter">
+                    <div class="csyw_img"><img src="images/csyw_img.png" /></div>
+                    <div class="csyw_word">
+                        抽奖总次数已用完
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--中奖后不可在参与-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="bkzcy" onclick="popuphide('bkzcy')">
+        <div class="bombs7  fail1">
+            <div class="inputcontent7">
+                <div class="tstk_conter">
+                    <div class="csyw_img"><img src="images/csyw_img.png" /></div>
+                    <div class="csyw_word">
+                        已中奖，不能继续参与
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--异常-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="error" onclick="popuphide('error')">
+        <div class="bombs7  fail1">
+            <div class="inputcontent7">
+                <div class="tstk_conter">
+                    <div class="csyw_img"><img src="images/csyw_img.png" /></div>
+                    <div class="csyw_word">
+                        出错了<br />请稍后再试
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--活动已结束-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="over" onclick="popuphide('error')">
+        <div class="bombs7  fail1">
+            <div class="inputcontent7">
+                <div class="tstk_conter">
+                    <div class="csyw_img">
+                        <!-- <img src="images/csyw_img.png" /> -->
+                    </div>
+                    <div class="csyw_word">
+                        很抱歉，该活动已结束！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 填写信息 -->
+    <div id="receive3" class="win1">
+        <div class="box3">
+            <div style="position:relative" id="siteBox">
+                <div class="sj"></div>
+                <div id="siteId"></div>
+                <div class="info shop"><span>地  区：</span><input type="text" readonly="readonly" id="siteName"></div>
+            </div>
+            <div style="position:relative" id="shopBox" >
+                <div class="sj"></div>
+                <div id="shopId"></div>
+                <div class="info"><span>店  铺：</span><input type="text" readonly="readonly" id="shopName"></div>
+            </div>
+            <!----图形-->
+            <!-- <div class="info right">
+                <canvas id="canvas" width="136" height="30"></canvas>
+            </div> -->
+            <!---图形end-->
+            <div style="position:relative;display: block" id="" >
+                <div class="si-pic" style="padding:0">
+                    <canvas id="canvas" width="80" height="29"></canvas>
+                </div>
+                <div class="info"><span>图形码：</span><input type="number" name="" id="picture"></div>
+            </div>
+            <!-- <div class="info" style="margin-top:0.2rem"><span>图形码：</span><input type="number" name="" id="picture"></div> -->
+            <div class="info"><span>手机号：</span><input type="number" name="" id="phone"></div>
+            <div style="position:relative" id="code" >
+                <button class="code-sj" id="btncode">获取验证码</button>
+                <div class="info"><span>验证码：</span><input type="number" id="setword"></div>
+            </div>
+            <!-- <div class="info"><span>验证码：</span><input type="number" name="" id="setword"></div> -->
+            <button id="submit">确 定</button>
+        </div>
+    </div>
+    <!--关注公众号-->
+    <div style="opacity: 1;display:none" class="bombScreen" id="subscript">
+        <div style="width:70%;margin: 0 auto;margin-top:30%;">
+            <p style="text-align:center;color:#fff;font-size:1.3rem;padding-top:2%">关注下面公共号才能参与活动</p>
+            <div style="width:90%;margin: 0 auto;margin-top:4%">
+                <img src="/upload/images/commonweixin/erweima.jpg" style="width:100%;" />
+                <p style="text-align:center;color:#fff;font-size:1.3rem;padding-bottom:2%">长按识别二维码关注</p>
+                <p style="text-align:center;color:#fff;font-size:1.3rem;"></p>
+            </div>
+            <img onclick="popuphide('subscript')" src="images/close.png?v=1.0.1" style="width:10%;margin-left: 45%;margin-top: 0.5rem;" />
+        </div>
+    </div>
+    <!--特等奖-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="grandPrize">
+        <div class="tcc_gxn">
+            <div class="tcc_del_img">
+                <a href="#" class="hdzp_img_wdith"><img src="images/close.png" onclick="closePopup('grandPrize')" /></a>
+            </div>
+            <div class="tcc_gxn_nr_form">
+                <div class="wz1 hdzp_img_wdith"><h2 id="prize0name" style="color: white;"></h2></div>
+                <div class="wz1_word" id="prize0word"></div>
+                <a class="jxcj_btn hdzp_img_wdith">
+                    <img id="grandreceive" src="images/receive.png" onclick="showReceive('402881f86699aedc01669b15dc79003d','dTf5myAo7e1bjvzspCJV','0');" />
+                    <img src="images/jxcj_btn.png" onclick="closePopup('grandPrize')" />
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--一等奖-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="prize1">
+        <div class="tcc_gxn">
+            <div class="tcc_del_img">
+                <a href="#" class="hdzp_img_wdith"><img src="images/close.png" onclick="closePopup('prize1')" /></a>
+            </div>
+            <div class="tcc_gxn_nr_form">
+                <div class="wz1 hdzp_img_wdith"><h2 id="prize1name" style="color: white;"></h2></div>
+                <div class="wz1_word" id="prize1word"></div>
+                <a class="jxcj_btn hdzp_img_wdith">
+                    <img id="prize1receive" src="images/receive.png" onclick="showReceive();" />
+                    <img src="images/jxcj_btn.png" onclick="closePopup('prize1')" />
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--二等奖-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="prize2">
+        <div class="tcc_gxn">
+            <div class="tcc_del_img">
+                <a href="#" class="hdzp_img_wdith"><img src="images/close.png" onclick="closePopup('prize2')" /></a>
+            </div>
+            <div class="tcc_gxn_nr_form">
+                <div class="wz1 hdzp_img_wdith"><h2 id="prize2name" style="color: white;"></h2></div>
+                <div class="wz1_word" id="prize2word"></div>
+                <a class="jxcj_btn hdzp_img_wdith">
+                    <img id="prize2receive" src="images/receive.png" onclick="showReceive();" />
+                    <img src="images/jxcj_btn.png" onclick="closePopup('prize2')" />
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--三等奖-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="prize3">
+        <div class="tcc_gxn">
+            <div class="tcc_del_img">
+                <a href="#" class="hdzp_img_wdith"><img src="images/close.png" onclick="closePopup('prize3')" /></a>
+            </div>
+            <div class="tcc_gxn_nr_form">
+                <div class="wz1 hdzp_img_wdith"><h2 id="prize3name" style="color: white;"></h2></div>
+                <div class="wz1_word" id="prize3word"></div>
+                <a class="jxcj_btn hdzp_img_wdith">
+                    <img id="prize3receive" src="images/receive.png" onclick="showReceive();" />
+                    <img src="images/jxcj_btn.png" onclick="closePopup('prize3')" />
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--四等奖-->
+    <div style="opacity: 1; display:none; " class="bombScreen" id="prize4">
+        <div class="tcc_gxn">
+            <div class="tcc_del_img">
+                <a href="#" class="hdzp_img_wdith"><img src="images/close.png" onclick="closePopup('prize4')" /></a>
+            </div>
+            <div class="tcc_gxn_nr_form">
+                <div class="wz1 hdzp_img_wdith"><h2 id="prize4name" style="color: white;"></h2></div>
+                <div class="wz1_word" id="prize4word"></div>
+                <a class="jxcj_btn hdzp_img_wdith">
+                    <img id="prize4receive" src="images/receive.png" onclick="showReceive();" />
+                    <img src="images/jxcj_btn.png" onclick="closePopup('prize4')" />
+                </a>
+            </div>
+        </div>
+    </div>
+    <div style="opacity: 1; display:none; " class="bombScreen" id="noprize">
+        <div class="tcc_gxn2">
+            <div class="tcc_del_img">
+                <a href="#" class="hdzp_img_wdith"><img src="images/close.png" onclick="closePopup('noprize')" /></a>
+            </div>
+            <div class="xx_img hdzp_img_wdith"><img src="images/xx_img.png" /></div>
+            <a class="jxcj_btn2 hdzp_img_wdith"><img src="images/jxcj_btn.png" onclick="closePopup('noprize')" /></a>
+        </div>
+    </div>
+    <!--奖品弹出框begin-->
+    <div style="opacity: 1; display:none" class="bombScreen" id="myAwards">
+        <div style="z-index:9980;color:#fff;position:fixed;top:35%;left:4%; background:url('images/arrows.png') no-repeat;width:2rem;height:30px" onclick="pre()"></div>
+        <div class="swiper-container" style="height:100%">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" style="color:#fff">
+                    <div class="" style="margin:10%">
+                        <div class="inputcontent7">
+                            <div class="tstk_conter">
+                                <div class="infomation_wkjdj_img hdzp_img_wdith"><img src="images/title_img.png" /></div>
+                                <div class="infomation_wkjdj_word">:</div>
+                                <div class="dh_time_word_form">
+                                    <p class="bt" style="padding-top:0"><span>兑奖须知</span></p>
+                                    <div class="dh_time_word">
+                                        请填写姓名，手机号等领奖信息，
+                                        持兑奖码联系主办方咨询兑奖。
+                                    </div>
+                                </div>
+                                <div class="dhm_form">
+                                    <p>兑奖码</p>
+                                    <div class="dhm_form_word">
+                                        <input type="text" name="cec_Firstname" value="" required maxlength="20" readonly="readonly" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="z-index:9980;color:#fff;position:fixed;top:35%;left:90%;width:2rem;height:30px; background:url('images/arrows.png') no-repeat 0px -30px;" onclick="next()"></div>
+        <div id="exchange" style="display:none">
+            请填写姓名，手机号等领奖信息，
+            持兑奖码联系主办方咨询兑奖。
+        </div>
+        <!--奖品弹出框end-->
+    </div>
+    <!-- 领奖信息弹出框begin -->
+    <a href="javascript:;" style="display:none" class="closed" id="bak"><div class="_fly" id="fly_page" style="overflow:hidden"></div></a>
+    <div class="_flys" style="display:none;" id="flys">
+        <div id="fly_pages" style="overflow:hidden;display:none;top:25%;">
+            <div class="pwpage" style="z-index: 9999;">
+                <h1 style="color:#f36c2a">您的兑奖码</h1>
+                <h1><span id="pasCard" style="color:#f36c2a"></span></h1>
+                <div>
+                    <div style="margin-bottom:10px">
+                        <input id="realname" value="" placeholder="请输入姓名" />
+                    </div>
+                    <div style="margin-bottom:10px">
+                        <input id="phone" value="" placeholder="请输入手机号" />
+                    </div>
+                    <div style="margin-bottom:10px">
+                        <input id="address" value="" placeholder="请输入地址" />
+                    </div>
+                </div>
+                <input id="awardsId" value="" type="hidden" />
+                <button type="button" onclick="receivePrize()">保存</button>
+                <button type="button" onclick="hideReceive()">关闭</button>
+            </div>
+        </div>
+        <div id="bntclose" style="background: rgba(255,255,255,0);width: 10%;overflow:hidden;display:none;margin:10px auto;" onclick="hideReceive()">
+            <img src="images/close.png">
+        </div>
+    </div>
+    <!---遮罩层-->
+    <div class="mask">
+            <div class="load">
+                <img src="./images/load.gif" alt="">
+            </div>
+        </div>
+    <!-- 领奖信息弹出框 end -->
+    <script>
+        var extraLuckyDraw = '0';
+    </script>
+    <script type="text/javascript">
+        //我的奖品
+        var mySwiper;
+        function pre() {
+            if (mySwiper) {
+                mySwiper.swipePrev();
+            }
+        }
+        function next() {
+            if (mySwiper) {
+                mySwiper.swipeNext();
+            }
+        }
+
+        //领奖信息
+        function receivePrize() {
+            var realname = $("#realname").val();
+            var phone = $("#phone").val();
+            var address = $("#address").val();
+            var id = $("#awardsId").val();
+            if (realname == "") {
+                alert("请填写姓名");
+                return;
+            }
+            var phoneCheck = /^[1][3,4,5,7,8][0-9]{9}$/;
+            if (phone == "") {
+                alert("请填写手机号");
+                return;
+            }
+            if (!phoneCheck.test(phone)) {
+                alert("请输入正确的手机号");
+                return;
+            }
+            if (address == "") {
+                alert("请填写地址");
+                return;
+            }
+            jQuery.ajax({
+                url: '/luckyroulette/doReceive.do',
+                type: 'post',
+                data: { id: id, realname: realname, phone: phone, address: address },
+                dataType: 'json',
+                success: function (data) {
+                    alert("领取成功");
+                    location.href = "";
+                }
+            })
+        }
+
+        //显示领奖信息
+        function showReceive(id, pasCard, i) {
+            $("#pasCard").html(pasCard);
+            if ($("#realname" + i).val() == 'null') {
+                var realname = $("#realname").val('');
+            } else {
+                var realname = $("#realname").val($("#realname" + i).val());
+            }
+            if ($("#phone" + i).val() == 'null') {
+                var phone = $("#phone").val('');
+            } else {
+                var phone = $("#phone").val($("#phone" + i).val());
+            }
+            if ($("#address" + i).val() == 'null') {
+                var address = $("#address").val('');
+            } else {
+                var address = $("#address").val($("#address" + i).val());
+            }
+            $("#awardsId").val(id);
+            $("#bak").css("display", "block");
+            $("#flys").css("display", "block");
+            $("#fly_pages").css("display", "block");
+            $("#bntclose").css("display", "block");
+        }
+        //隐藏领奖信息
+        function hideReceive() {
+            $("#bak").css("display", "none");
+            $("#flys").css("display", "none");
+            $("#fly_pages").css("display", "none");
+            $("#bntclose").css("display", "none");
+        }
+    </script>
+    <!-- 活动运行状态  start-->
+    <input id="actStatus" type="hidden" value="isStart" />
+    <!-- 活动运行状态  end-->
+</body>
+</html>
+<script>
+    //活动结束后可领奖
+    $("#actMsg").click(function () {
+        var type = $("#actStatus").val();
+        if (type == 'isEnd') {
+            $("#actMsg").css("display", "none");
+        }
+    })
+
+    jQuery.get('/content/system/vm/ad.vm?t=' + new Date().getTime(), function (data) {
+        $('#ad').html(data);
+    });
+</script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    wx.config({
+        debug: false,
+        appId: 'wx6596a35fea9085d4',
+        timestamp: 1420942347,
+        nonceStr: 'oDxlNmsjqvV9D29r',
+        signature: 'c5006db198b98238a0b12346ee2ed18a42fdfa19',
+        jsApiList: ['checkJsApi', 'onMenuShareTimeline', 'onMenuShareAppMessage']
+    });
+    wx.ready(function () {
+        var fxurl = "http://CCCCCC/jeewx/weixinLinkController.do?link&id=ff8080815750232a0157a958c7314808&actId=ff80808157ac8ecc0157ada5bcb20070&jwid=gh_f268aa85d1c7";
+        var imgUrl = "http://XXXXXX/fximg.jpg";
+        var pyqtitle = "大转盘抽奖转出好运气，快来试一试~~";
+        var pytitle = "大转盘抽奖转出好运气";
+        var pydesc = "快来试一试~~";
+        wx.onMenuShareTimeline({
+            title: pyqtitle,
+            link: fxurl,
+            imgUrl: imgUrl,
+            success: function () {
+                //有额外的抽奖机会，并且没有分享过
+                if ('0' == extraLuckyDraw && '0' != '1') {
+                    fxCallback(1);
+                }
+            },
+            cancel: function () {
+            }
+        });
+        wx.onMenuShareAppMessage({
+            title: pytitle,
+            desc: pydesc,
+            link: fxurl,
+            imgUrl: imgUrl,
+            type: 'link',
+            dataUrl: '',
+            success: function () {
+                //有额外的抽奖机会，并且没有分享过
+                if ('0' == extraLuckyDraw && '0' != '1') {
+                    fxCallback(0);
+                }
+            },
+            cancel: function () {
+            }
+        });
+    });
+    var fxCallback = function (type) {
+        jQuery.ajax({
+            url: '/luckyroulette/fxCallback.do',
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                type: type,
+                openid: 'oDltNwURr6RJkuF3QCUxsuEFJHOA',
+                actId: 'ff80808157ac8ecc0157ada5bcb20070'
+            },
+            success: function (data) {
+                if (data.success) {
+                    //分享成功之后，增加额外次数
+                    $("#shareFlag").val("0");
+                    if (data.obj == "success") {
+                        var playnumfx = parseInt($("#playnum").html());
+                        $("#playnum").html(playnumfx + 1)
+                        $("#playnumId").html(playnumfx + 1);
+                    }
+                }
+            }
+        });
+    };
+    $(function () {
+        var w = 0;
+        $(".dowebok div").find("li").each(function (index, element) {
+            w = w + $(this).width() + $(window).width() * 0.005;
+            lastIndex = $(this).width() + $(window).width() * 0.01;
+        });
+        $('#marqueeDiv').css("width", $(window).width() + "px");
+        $('#marquee').css("width", w + "px");
+        $('.dowebok').liMarquee({ "hoverstop": false, "scrollamount": 40 });
+    });
+    
+</script>
+<style>
+    #playbtn {
+        left: 32%;
+        top: 32%;
+    }
+
+    .str_wrap {
+        height: 2rem !important;
+        background: none
+    }
+</style>

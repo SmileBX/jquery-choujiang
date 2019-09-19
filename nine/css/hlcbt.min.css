@@ -1,0 +1,269 @@
+* {
+	margin: 0;
+	outline: 0;
+	padding: 0;
+	font-size: 100%;
+	-webkit-tap-highlight-color: transparent
+}
+
+a {
+	text-decoration: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, .35)
+}
+
+html {
+	height: 100%;
+	font-size: 100%;
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+	font-family: "微软雅黑";
+	font-size: .7rem;
+	line-height: 1.231;
+	-webkit-touch-callout: none;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-moz-box-orient: vertical;
+	-webkit-box-align: stretch;
+	-moz-box-align: stretch;
+	position: relative
+}
+
+img {
+	-ms-interpolation-mode: bicubic;
+	vertical-align: middle
+}
+
+.soundIcon {
+	z-index: 100
+}
+
+.gameInfoBox {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0
+}
+
+.joinInfoBox {
+	font-style: "微软雅黑";
+	font-size: .7rem;
+	text-align: center
+}
+#joinNumLine,#drawInfo{
+	color: #750b0b;
+	font-size: 0.65rem;
+	text-shadow: rgb(253, 195, 129) -1px -1px 0px, rgb(253, 195, 129) 0px -1px 0px, rgb(253, 195, 129) 1px -1px 0px, rgb(253, 195, 129) 1px 0px 0px, rgb(253, 195, 129) 1px 1px 0px, rgb(253, 195, 129) 0px 1px 0px, rgb(253, 195, 129) -1px 1px 0px, rgb(253, 195, 129) -1px 0px 0px;
+}
+#joinNumLine {	
+top: 21.876331910860696rem;
+left: 3.582089435696488rem;	
+}
+
+#drawInfo {
+	top: 22.8571rem;
+	left: 2.38806rem;  
+}
+
+.specil {
+	color: #fff
+}
+.theLightBox .Light0{
+	background-image: url(../image/light0.png);
+}
+.theLightBox .Light1{
+	background-image: url(../image/light1.png);
+}
+.theLightBox2 .Light0{
+	background-image: url(../image/light1.png);
+}
+.theLightBox2 .Light1{
+	background-image: url(../image/light0.png);
+}
+.theRealFlashLight {
+	width: .7rem;
+	height: .7rem;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.startBtnImg{
+	background-image: url(../image/btn0.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 3.35rem;
+	height: 3.35rem;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	position: absolute;
+}
+.startBtnImg.cur{
+	background-image: url(../image/btn1.png);
+}
+.showGifBoxer {
+	background-image: url(../image/ACgIABAEGAAg5rHG2gUopqj98gMw-gM4-gM.png);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	width: 12.75rem;
+	height: 12.75rem;
+	position: absolute;
+	top: 8.82729rem;
+	left: 1.6rem;
+}
+
+#inner,
+.giftBox,
+.theLightBox {
+	position: absolute;
+	left: 0;
+	top: 0
+}
+
+.theGiftBox {
+	width: 3.35rem;
+	height: 3.35rem;
+	background-size: 100% 100%;
+	background-repeat: no-repeat
+}
+
+.theImgBox {
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	border-radius: .2rem;
+	overflow: hidden
+}
+.cover .theImgBox:after{
+	content: "";
+	display: block;
+	height: 100%;
+	width: 100%;
+	background: rgba(0,0,0,.3);
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	z-index: 9;
+}
+.cover .theImgBox.active:after{
+	display: none;
+}
+.theImgBox img {
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	width: 100%; height: 100%;
+}
+
+.theShowerGiftBoxer,
+.theShowerGiftBoxer .priceBox {
+	position: absolute;
+	left: 0.05rem;
+	top: 0.05rem;
+	width: 100%;
+    height: 100%;
+}
+
+.biggerBoxer {
+	width: 3.35rem;
+	height: 3.35rem;
+	background-image: url(../image/ACgIABAEGAAgzuq00AUotq_7ygYwhgE4hgE.png);
+	background-position: center center;
+	background-repeat: no-repeat; background-size: 100% 100%;
+}
+
+.littleBoxer {
+	width: 2.45rem;
+	height: 2.45rem
+}
+
+.top1 {
+	top: 1.05rem
+}
+
+.top2 {
+	top: 4.7rem
+}
+
+.top3 {
+	top: 8.35rem
+}
+
+.top4 {
+	top: 3.8rem
+}
+
+.top5 {
+	top: 6.55rem
+}
+
+.top6 {
+	top: 9.3rem
+}
+
+.left1 {
+	left: 1.3rem
+}
+
+.left1_new {
+	left: 1rem
+}
+
+.left2 {
+	left: 4.95rem
+}
+
+.left2_new {
+	left: 4.675rem
+}
+
+.left3 {
+	left: 8.6rem
+}
+
+.left3_new {
+	left: 8.35rem
+}
+
+.left4 {
+	left: 4.05rem
+}
+
+.left4_new {
+	left: 3.75rem
+}
+
+.left5 {
+	left: 6.8rem
+}
+
+.left5_new {
+	left: 6.5rem
+}
+
+.left6 {
+	left: 9.55rem
+}
+
+.left6_new {
+	left: 9.3rem
+}
+
+#outer {
+	position: absolute;
+	left: 1rem;
+	top: .65rem;
+	z-index: 22;
+	display: none
+}

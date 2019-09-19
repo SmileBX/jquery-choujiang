@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>活动规则</title>
+    <link rel="stylesheet" href="css/rules.css">
+    <script src="js/jquery-1.8.0.min.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        a{text-decoration:none;}
+        html,body{
+            background: #D8C7AB;
+            width: 100%;
+            height: auto;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+       <h1>活动规则</h1>
+        <div class="rulesbox">
+            <!-- <p>1、2017年1月25日－2017年2月6日期间用户可免费领取一份200M省内流量福袋，每个号码限领1次。也可以5元购买1份100M省内流量塞入我的流量福袋中，但每次限买10份，每天限购10次，费用直接扣减话费。"我的流量福袋"内的流量可"送好友"也可"自己用"。首次"送好友"会随机获得50M-200M的额外省内流量奖励并存入"我的流量福袋"中。<br><br>
+                2、选择"送好友"可将"我的流量福袋"内的流量随机包成一个"新年福袋"分享给好友领取，每次福袋内最多10个小福袋，总流量至少是福袋的个数*10M。已发送的"新年福袋"必须领完或失效后才能再次发起第二个"新年福袋"。<br><br>
+                3、好友发送的"新年福袋"内流量仅限福建电信天翼号码领取，同一个号码只可从同一个福袋内领取一份流量。<br><br>
+                4、"新年福袋"发送成功后1小时内不能手动撤回，福袋内的流量将在福袋失效后自动撤回"我的流量福袋"中（新年福袋有效期示例：1月25日生成发送的福袋，1月27日凌晨0点失效，未领取完的流量将撤回我的流量福袋中）；"新年福袋"中已被好友领取的流量如果受理不成功将在48小时内撤回我的流量福袋中。<br><br>
+                5、选择"自己用"可将"我的流量福袋"内的流量兑换自己使用（兑换使用的流量应为10M的整数倍）。<br><br>
+                6、"我的流量福袋"内的流量一旦送出或自己领用，有效期至2017年2月28日。活动结束后，"我的流量福袋"内未使用的流量将自动充值到该用户的福建电信天翼号码中，有效期至2017年2月28日。本次活动使用的流量均为省内流量。<br><br>
+                7、天翼副号、天翼小号、6分卡（0元保底）、天翼4G日租卡、上网卡、个人定制套餐、飞Young4G定制套餐、乐享家套餐、4G+云卡套餐及时长型套餐等不能加装流量包套餐的用户不能参与此次活动，详询10000号。<br><br>
+                备注：非实名制用户不能受理流量包，请前往电信营业厅进行实名补登记后再参与。
+            </p> -->
+        </div>
+    </div>
+    <div class="footer">
+        <img src="images/rulesBg.png">
+        <div class="footer-btn"><span id="back">返&nbsp;回</span></div>
+    </div>
+    <script>
+        (function(){
+            function resizeBaseFontSize(){
+                var rootHtml = document.documentElement,
+                    deviceWidth = rootHtml.clientWidth;
+                if(deviceWidth > 1024){
+                    deviceWidth = 1024;
+                }
+                rootHtml.style.fontSize = deviceWidth / 7.5 + "px";
+            }
+            resizeBaseFontSize();
+            window.addEventListener("resize", resizeBaseFontSize, false); //onresize 事件会在窗口或框架被调整大小时发生。
+            window.addEventListener("orientationchange", resizeBaseFontSize, false);  //屏幕旋转事件：onorientationchange
+        })();
+    </script>
+    <script type="text/javascript">
+        var activityId=getUrlParam("id");//获取链接携带活动id
+        var phone=getUrlParam("phone")
+        // activityId=2;
+        $(document).ready(function(){
+            $.ajax({
+                type: "POST",
+                url: "http://h5api.wtvxin.com/api/LotteryDraw/activitygz?activityId="+activityId,
+                data: {
+                    // id:2
+                },
+                // dataType:"json",
+                success: function (res) {
+                    if(res.code==0){
+                        $('.rulesbox').append(res.Content)
+                    }
+                }
+            })
+        })
+        $("#back").click(function(){
+            location.href ="index.html?id="+activityId+"&phone="+phone;
+        });
+        //获取链接参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var url = window.location.search.substr(1); //.toLowerCase();
+            var r = url.match(reg);
+            if(r != null) return unescape(r[2]);
+            return null;
+        }
+    </script>
+</body>
+</html>

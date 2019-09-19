@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+		<title>活动抽奖</title>
+		<script type='text/javascript'>
+			var fromCanal = '-1';
+			if (false) {
+				parent = top = window;
+			}
+
+			var g_serverTime = 1567825929218;
+			var g_timeDeviation = g_serverTime - new Date().getTime(); //服务器时间与系统时间偏差
+			var g_rem = 20;
+			(function(win) {
+				var orientationX = false; //是否横屏进来
+				if (win.orientation == 90 || win.orientation == -90) {
+					orientationX = true;
+				}
+				var docEl = win.document.documentElement,
+					tid;
+
+				function refreshRem1() {
+					g_rem = docEl.getBoundingClientRect().width / 16;
+					!g_rem && (g_rem = 20);
+					docEl.style.fontSize = g_rem + 'px';
+				}
+
+				function refreshRem2() {
+					g_rem = docEl.getBoundingClientRect().width / 16;
+					if (!g_rem) {
+						return refreshRem1();
+					}
+					var width = docEl.getBoundingClientRect().width;
+					var d = win.document.createElement('div');
+					d.style.width = '1rem';
+					d.style.display = "none";
+					docEl.firstElementChild.appendChild(d);
+					var defaultFontSize = parseFloat(window.getComputedStyle(d, null).getPropertyValue('width'));
+					docEl.firstElementChild.removeChild(d);
+					docEl.style.fontSize = (g_rem / defaultFontSize) * 100 + '%';
+				}
+				var refreshRem = /vivo(?!\s?(x23|Y85A|Xplay6|x20|Y79A))|HUAWEI|OPPO(?!\s?(R9 Plusm))|ONEPLUS A5000/i.test(
+					navigator.userAgent) && !/HUAWEIHMA-AL00|HUAWEIEVA-AL10/i.test(navigator.userAgent) ? refreshRem2 : refreshRem1; // 华为mate20以及华为P9不能用方案二。。。
+				try {
+					win.addEventListener("orientationchange", function() { //触发手机横屏竖屏事件
+						if (orientationX) {
+							location.reload();
+						}
+					}, false);
+				} catch (e) {}
+				win.addEventListener('pageshow', function(e) {
+					if (e.persisted) {
+						clearTimeout(tid);
+						tid = setTimeout(refreshRem, 100);
+					}
+				}, false);
+				refreshRem();
+			})(window);
+
+			// 下面这段代码，主要是为了防止用户调整微信浏览器字体大小导致的rem异常。
+			(function() {
+				if (typeof WeixinJSBridge == "object" && typeof WeixinJSBridge.invoke == "function") {
+					handleFontSize();
+				} else {
+					if (document.addEventListener) {
+						document.addEventListener("WeixinJSBridgeReady", handleFontSize, false);
+					} else if (document.attachEvent) {
+						//IE浏览器，非W3C规范
+						document.attachEvent("onWeixinJSBridgeReady", handleFontSize);
+					}
+				}
+
+				function handleFontSize() {
+					// 设置网页字体为默认大小
+					WeixinJSBridge.invoke('setFontSizeCallback', {
+						'fontSize': 0
+					});
+					// 重写设置网页字体大小的事件
+					WeixinJSBridge.on('menu:setfont', function() {
+						WeixinJSBridge.invoke('setFontSizeCallback', {
+							'fontSize': 0
+						});
+					});
+				}
+			})();
+		</script>
+		<link rel="preload" href="js/jquery-core.min.js" as="script" />
+
+		<link href="css/base.min.css" rel="stylesheet" type="text/css" />
+
+		<link href="css/hlcbt.min.css" rel="stylesheet" type="text/css" />
+
+		<link href="css/fission.min.css" rel="stylesheet" type="text/css" />
+
+		<link href="css/comm/weui.min.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	</head>
+	<body class="body">
+		<div id="preloadPage" class="bg">
+		    <div class="spinner">
+		        <div class="spinner-container container1">
+		            <div class="circle1"></div>
+		            <div class="circle2"></div>
+		            <div class="circle3"></div>
+		            <div class="circle4"></div>
+		        </div>
+		        <div class="spinner-container container2">
+		            <div class="circle1"></div>
+		            <div class="circle2"></div>
+		            <div class="circle3"></div>
+		            <div class="circle4"></div>
+		        </div>
+		        <div class="spinner-container container3">
+		            <div class="circle1"></div>
+		            <div class="circle2"></div>
+		            <div class="circle3"></div>
+		            <div class="circle4"></div>
+		        </div>
+		    </div>
+		    <div class="loadingtxt">加载中...</div>
+		</div>
+		<div class="ajaxLoadBg">
+			<div class="ajaxLoadBar"></div>
+		</div>
+		<div class="home">
+			<div id="homeBgBox">
+				<img id="homeBg" src="image/ACgIABADGAAgv4q50AUo3LiLNDCABTjADA.gif" />
+			</div>
+			<div class="showGifBoxer editTarget-showGifBoxer">
+				<div class="theShowerGiftBoxer">
+					<div class="priceBox" id="luck">
+						<div class="editTarget-priceD hd-game-theBg-fillAuto theImgBox theImgBox-0 abs biggerBoxer top1 left1_new">
+							<img class="editTarget-thePrice3" alt="未中奖" src="image/ACgIABAEGAAgovK00AUoyby8kgQwhgE4hgE.png">
+						</div>
+						<div class="editTarget-priceD hd-game-theBg-fillAuto theImgBox theImgBox-1 abs biggerBoxer top1 left2_new">
+							<img class="editTarget-thePrice1" alt="四等奖" src="image/ACgIABAEGAAg_-G00AUoqP_5_AIwhgE4hgE.png"></div>
+						<div class="editTarget-priceD hd-game-theBg-fillAuto theImgBox theImgBox-2 abs biggerBoxer top1 left3_new">
+							<img class="editTarget-thePrice2" alt="二等奖" src="image/ACgIABAEGAAgr-y00AUo2vyT8AYwhgE4hgE.png"></div>
+						<div class="editTarget-priceD hd-game-theBg-fillAuto theImgBox theImgBox-3 abs biggerBoxer top2 left3_new">
+							<img class="editTarget-thePrice3" alt="未中奖" src="image/ACgIABAEGAAgovK00AUoyby8kgQwhgE4hgE.png"></div>
+						<div class="editTarget-priceD hd-game-theBg-fillAuto theImgBox theImgBox-4 abs biggerBoxer top3 left3_new">
+							<img class="editTarget-thePrice3" alt="三等奖" src="image/ACgIABAEGAAgsvy00AUozKH1xQIwhgE4hgE.png"></div>
+						<div class="editTarget-priceD hd-game-theBg-fillAuto theImgBox theImgBox-5 abs biggerBoxer top3 left2_new">
+							<img class="editTarget-thePrice0" alt="未中奖" src="image/ACgIABAEGAAgovK00AUoyby8kgQwhgE4hgE.png"></div>
+						<div class="editTarget-priceD hd-game-theBg-fillAuto theImgBox theImgBox-6 abs biggerBoxer top3 left1_new">
+							<img class="editTarget-thePrice3" alt="五等奖" src="image/ACgIABAEGAAgsvy00AUozKH1xQIwhgE4hgE.png"></div>
+						<div class="editTarget-priceD hd-game-theBg-fillAuto theImgBox theImgBox-7 abs biggerBoxer top2 left1_new">
+							<img class="editTarget-thePrice2" alt="一等奖" src="image/ACgIABAEGAAgr-y00AUo2vyT8AYwhgE4hgE.png"></div>
+					</div>
+					<div class="theLightBox" id="deng" style="display: none">
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style="top: 0px; left: 5.85938px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="top: 0px; left: 52.7344px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" top: 0px; left: 99.6094px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="top: 0px; left: 146.484px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" top: 0px; left: 193.359px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="top: 0px; left: 240.234px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" left: 281.25px; top: 1.17188px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="left: 282.422px; top: 49.2188px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" left: 282.422px; top: 93.75px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="left: 282.422px; top: 138.281px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" left: 282.422px; top: 182.813px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="left: 282.422px; top: 227.344px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" top: 275.391px; left: 281.953px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="top: 281.953px; left: 235.547px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" top: 281.953px; left: 189.141px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="top: 281.953px; left: 142.734px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" top: 281.953px; left: 96.3281px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="top: 281.953px; left: 49.9219px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" left: 8.20313px; top: 278.906px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="left: 0px; top: 232.031px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" left: 0px; top: 185.156px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="left: 0px; top: 138.281px;"></div>
+
+						<div class="Light0 theRealFlashLight abs hd-game-theBg-fillAuto" style=" left: 0px; top: 91.4063px;"></div>
+
+						<div class="Light1 theRealFlashLight abs hd-game-theBg-fillAuto" style="left: 0px; top: 44.5313px;"></div>
+
+					</div>
+					<div class="startBtnImg editTarget-startBtnImg hd-game-theBg-fillAuto abs"></div>
+				</div>
+				<div class="theBoxerForEdit hide">
+					<div class="editTarget-priceD"></div>
+				</div>
+
+				<canvas id="outer">您的浏览器不支持canvas，请换一个牛逼一点的浏览器，谢谢</canvas>
+
+			</div>
+			<div class='gameInfoBox'>
+				<div class="titleImg imgContainer absCenter titleDown">
+					<img id="titleImg" class="slaveImg abs" style="width:14.58422127390713rem;height:5.287846309837673rem;top:2.7292109986258954rem;left:0.7249466715100036rem;"
+					 src="image/ACgIABAEGAAg3Z210AUowNy7iAEwxAQ40gE.png" />
+				</div>
+			</div>
+
+
+			<!-- <div class="joinInfoBox">
+				<div id='joinNumLine' class='joinNumLine absCenter'>
+					已有<span id='joinNum' class='specil'> 0 </span>人参与
+				</div>
+				<div id="drawInfo" class="absCenter editTarget-drawInfo">
+					<div class="hide dayDraw4Total">今天可抽 <span class="count specil dayDrawCount">3</span> 次</div>
+					<div class="hide totalDraw">您还有 <span class="totalDrawCount specil">6</span> 次抽奖机会</div>
+					<div class="dayDraw">您今天还有 <span id="count" class="specil dayDrawCount">3</span> 次抽奖机会</div>
+				</div>
+			</div> -->
+
+		</div>
+		<div class="ruleImg imgContainer absCenter" onclick="showRule();">
+			<div id="ruleImg" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate"></div>
+		</div>
+		<!-- 活动锦囊 -->
+		<div id="poupInfoBox">
+			<div class="poupHead">
+			    <div class="poupTitleBox">
+			        <div id="actionExpBtn" class="poupTitleMune checked">
+			            <div class="item">活动说明</div>
+			        </div>
+			        <div id="prizeBtn" class="poupTitleMune">
+			            <div class="item">我的奖品<span id='Award_Round_Dot' class='redDot hide'></span></div>
+			        </div>
+			    </div>
+			    <div class="poupClose"></div>
+			    <div style="clear:both; height:0"></div>
+			</div>
+			<div id="popTabBox" class="popTabBox transitionPanel">
+				<div id="rankBox" class="poupMain">
+					<h1>活动规则</h1>
+					<div class="rulesbox">
+					</div>
+				</div>
+				<div id="awardBox" class="poupMain" style="display: none;">
+					<h6>中奖记录</h6>
+					<div class="content">
+						<table class="win-table">
+							<tbody class="trophyList">
+								<!-- <tr>
+									<td>sdfsd 地方</td>
+									<td>华为</td>
+									<td>2016-06-13 14:15</td>
+								</tr> -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 填写信息 -->
+		<div id="receive3" class="win1">
+		    <div class="box3">
+				<div class="headtit">填写信息</div>
+				<div class="info selectbox">
+					<span>地  区：</span>
+					<input type="text" readonly="readonly" id="Area">
+					<i class="sj"></i>
+					<div id="AreaId" class="downDiv"></div>
+				</div>
+				<div class="info selectbox">
+					<span>店  铺：</span>
+					<input type="text" readonly="readonly" id="shopName">
+					<i class="sj"></i>
+					<div id="shopId" class="downDiv"></div>
+				</div>
+				<div style="position:relative;display:none" id="" >
+					<div class="si-pic" style="padding:0">
+						<canvas id="canvas" width="75" height="28"></canvas>
+					</div>
+					<div class="info"><span>图形码：</span><input type="number" name="" id="picture"></div>
+				</div>
+				<div class="info"><span>手机号：</span><input type="number" name="" id="phone"></div>
+				<div style="position:relative" id="code" >
+					<button class="code-sj">获取验证码</button>
+					<div class="info"><span>验证码：</span><input type="number" id="setword"></div>
+				</div>
+		        <button id="submit">确 定</button>
+			</div>
+			<!-- <div class="box3">
+				<div class="headtit">填写信息</div>
+				<div style="position:relative" id="siteBox">
+					<div class="sj"></div>
+					<div id="siteId"></div>
+					<div class="info shop"><span>地  区：</span><input type="text" readonly="readonly" id="siteName"></div>
+				</div>
+				<div style="position:relative" id="shopBox" >
+					<div class="sj"></div>
+					<div id="shopId"></div>
+					<div class="info"><span>店  铺：</span><input type="text" readonly="readonly" id="shopName"></div>
+				</div>
+				
+				<div style="position:relative;display:none" id="" >
+					<div class="si-pic" style="padding:0">
+						<canvas id="canvas" width="75" height="28"></canvas>
+					</div>
+					<div class="info"><span>图形码：</span><input type="number" name="" id="picture"></div>
+				</div>
+				
+				<div class="info"><span>手机号：</span><input type="number" name="" id="phone"></div>
+				<div style="position:relative" id="code" >
+					<button class="code-sj">获取验证码</button>
+					<div class="info"><span>验证码：</span><input type="number" id="setword"></div>
+				</div>
+				
+				<button id="submit">确 定</button>
+			</div>
+		</div> -->
+		<div class="resuleBox hide">
+			<div id="resule-gift-box" style="display:none">
+				
+				<div id="giftbox"></div>
+				<div id="resule-gift-buttonMenu-bottom">
+					<div class="bottom-line">
+						<div class='resule-gift-home menuBack  greenBtn flowBtn'>返回</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+		<script src="layer.m/layer.js"></script>
+		<script src="layer.m/layerfun.js"></script>
+		<script type="text/javascript">
+			var shopid="";
+			var phone="";
+			var activityId="";//活动id
+			var hasTime=false;//活动是否正在进行，有无过期
+			var hasChance=false;//是否可以抽奖
+			var InterValObj1 = null
+        	var curCount1 = "" //验证码倒计时
+			var code="";//短信验证码
+			$(document).ready(function(){
+				show(5236)
+			    activityId=getUrlParam("id");//获取链接携带活动id
+			    // activityId=3;
+			    $.ajax({
+			        type: "POST",
+			        url: "http://h5api.wtvxin.com/api/Activity/GetActivity?id="+activityId,
+			        data: {
+			            // id:2
+			        },
+			        // dataType:"json",
+			        success: function (res) {
+						setTimeout(function() {
+							$('#preloadPage').hide();
+						}, 1000);
+			            if(res.code==0){
+							document.title=res.title //动态修改标题
+							if(res.data){
+								$("#homeBg").attr("src",res.data);
+							}
+			                hasTime=true;
+							$('#Area').val(res.obj[0].City);
+							$("#shopName").val(res.obj[0].List[0].ShopName)
+						   var Cityindex=0;
+						   
+						   $("#Area").click(function(){
+							  $('#AreaId').html(""); 
+							  var CityItem="";
+							  for(var i=0;i<res.obj.length;i++){
+							  	CityItem+='<div class="item" data-index="'+i+'">'+res.obj[i].City+'</div>';
+							  }
+							  $('#AreaId').append(CityItem); 
+						   	  $('#AreaId').toggle();
+						   });
+						   $('#AreaId').on("click",".item",function(){
+							   var txt=$(this).text();
+							   Cityindex=$(this).attr('data-index');
+							   $('#Area').val(txt);
+							   $('#AreaId').hide();
+							//    $('#shopName').val("");
+							//    $('#shopId').html("");
+								$("#shopName").val(res.obj[Cityindex].List[0].ShopName);
+								shopid=res.obj[Cityindex].List[0].Id
+							   for(var j=0;j<res.obj[Cityindex].List.length;j++){
+								  	  shopItem+='<div class="item" data-id="'+res.obj[Cityindex].List[j].id+'">'+res.obj[Cityindex].List[j].ShopName+'</div>';
+								  } 
+								  $('#shopId').append(shopItem)
+						   })
+						   $("#shopName").click(function(){
+							   $('#shopId').html("");
+							   var shopItem="";
+							   if($('#Area').val()){
+								  for(var j=0;j<res.obj[Cityindex].List.length;j++){
+								  	  shopItem+='<div class="item" data-id="'+res.obj[Cityindex].List[j].id+'">'+res.obj[Cityindex].List[j].ShopName+'</div>';
+								  } 
+								  $('#shopId').append(shopItem)
+							   }
+							   $('#shopId').toggle();
+						   });
+						   $('#shopId').on("click",".item",function(){
+							   var txt=$(this).text();
+							   shopid=$(this).attr('data-id');
+							   $('#shopName').val(txt);
+							   $('#shopId').hide();
+						   })
+						   
+			            }else{
+			                hasTime=false;
+			                msgTips("很遗憾，本次活动已结束！")
+			            }
+			        }
+			    })
+			})
+			//提示
+			function msgTips(msg) {
+			    layer.open({
+			        content: "<span style=\"font-size: .5rem;\">" + msg + "</span>",
+			        skin: 'msg',
+			        time: 3 //2秒后自动关闭
+			    });
+			}
+			//获取链接参数
+			function getUrlParam(name) {
+			    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+			    var url = window.location.search.substr(1); //.toLowerCase();
+			    var r = url.match(reg);
+			    if(r != null) return unescape(r[2]);
+			    return null;
+			}
+			//提交信息
+			$("#submit").click(function(){
+			    phone=$("#phone").val()
+			    var r_phone = /^[1]+\d{10}/;
+				if (shopid == "") {
+				    msgTips("请选择店铺");
+				    return false;
+				}
+			    if (phone == "") {
+			        msgTips("手机号不能为空");
+			        return false;
+			    }
+			    if (!r_phone.test(phone)) {
+			        msgTips("请输入正确的手机号");
+			        return false;
+			    }
+			    $.ajax({
+			        type: "POST",
+			        url: "http://h5api.wtvxin.com/api/JoinActivities/GetJoinActivities?mobile="+phone+"&activityId="+activityId+"&shopid="+shopid+"&code="+code,
+			        // data: {
+			        //     mobile:"15927443397",
+			        //     shopid:2
+			        // },
+			        success: function (res) {
+			            $('#receive3').hide();
+			            console.log(res)
+			            if(res.code==0){
+			                hasChance=true;
+			                msgTips("恭喜您成功获得了次抽奖机会！")
+			            }else{
+			                msgTips("很遗憾，您的抽奖次数已用完！")
+			            }
+			            console.log(hasChance)
+			        }
+			    })
+			});
+			
+			
+			
+			var luck = {
+				index: 0, //当前转动到哪个位置，起点位置
+				count: 0, //总共有多少个位置
+				timer: 0, //setTimeout的ID，用clearTimeout清除
+				speed: 20, //初始转动速度
+				times: 0, //转动次数
+				cycle: 0, //转动基本次数：即至少需要转动多少次再进入抽奖环节
+				prize: -1, //中奖位置
+				init: function(id) {
+					if ($("#" + id).find(".theImgBox").length > 0) {
+						$luck = $("#" + id);
+						$units = $luck.find(".theImgBox");
+						this.obj = $luck;
+						this.count = $units.length;
+						$luck.find(".theImgBox-" + this.index).addClass("active");
+					};
+				},
+				roll: function() {
+					var index = this.index;
+					var count = this.count;
+					var luck = this.obj;
+					$(luck).find(".theImgBox-" + index).removeClass("active");
+					index += 1;
+					if (index > count - 1) {
+						index = 0;
+					};
+					$(luck).find(".theImgBox-" + index).addClass("active");
+					this.index = index;
+					return false;
+				},
+				stop: function(index) {
+					this.prize = index;
+					console.log("中奖位置"+this.prize);
+					return false;
+				}
+			};
+
+
+			function roll() {
+				luck.times += 1;
+				luck.roll();
+				if (luck.times > luck.cycle + 10 && luck.prize == luck.index) {
+					clearTimeout(luck.timer);
+					luck.prize = -1;
+					luck.times = 0;
+					click = false;
+					setTimeout(function() {
+						$(".resuleBox,#resule-gift-box").show();
+					}, 1000);
+				} else {
+					if (luck.times < luck.cycle) {
+						luck.speed -= 10;
+					} else if (luck.times == luck.cycle) {
+						var index = Math.random() * (luck.count) | 0;
+						luck.prize = index;
+					} else {
+						if (luck.times > luck.cycle + 10 && ((luck.prize == 0 && luck.index == 7) || luck.prize == luck.index + 1)) {
+							luck.speed += 110;
+						} else {
+							luck.speed += 20;
+						}
+					}
+					if (luck.speed < 40) {
+						luck.speed = 40;
+					};
+
+					luck.timer = setTimeout(roll, luck.speed);
+				}
+				return false;
+			}
+
+
+			//闪灯效果
+			var num = 0;
+			$(".theLightBox").attr("class", function() {
+				setInterval(function() {
+					num++;
+					if (num % 2 == 0) {
+						$('#deng').addClass("theLightBox2");
+					} else {
+						$('#deng').addClass("theLightBox");
+						$('#deng').removeClass('theLightBox2');
+					}
+				}, 500)
+			})
+
+			var click = false;
+			window.onload = function() {
+				luck.init('luck');
+				$(".startBtnImg").click(function() {
+					if(hasTime){
+						if(hasChance){
+							$.ajax({
+							    type: "POST",
+							    url: "http://h5api.wtvxin.com/api/LotteryDraw/Lotterydraw?mobile="+phone+"&activityId="+activityId+"&shopid="+shopid+"&code="+code,
+							    // data: {
+							    //     mobile:"15927443397",
+							    //     shopid:2
+							    // },
+							    success: function (res) {
+							        console.log(res);
+									
+							        if(res.code==0){
+							            //按下弹起效果
+							            $(".startBtnImg").addClass("cur");
+							            $('.priceBox').addClass('cover');
+							            setTimeout(function() {
+							            	$(".startBtnImg").removeClass("cur");
+							            }, 300);
+							            if (click) {
+							            	return false;
+							            } else {
+							            	luck.speed = 100;
+											if(res.price.Grade=="一等奖"){
+												luck.stop(7);
+											}else if(res.price.Grade=="二等奖"){
+												luck.stop(2);
+											}else if(res.price.Grade=="三等奖"){
+												luck.stop(4);
+											}else if(res.price.Grade=="四等奖"){
+												luck.stop(1);
+											}else if(res.price.Grade=="五等奖"){
+												luck.stop(6);
+											}
+											roll();
+											click = true;
+											$('#giftbox').empty()
+											var str="";
+											str+='<div id="resule-gift-scrollWrap" class="resule-gift-overflowScrolling" style="padding-top:1.2rem;">';
+											str+='<div id="luckContainer">';
+											str+='<p id="resule-gift-luck" style="text-align:center; margin-bottom:1rem">恭喜你获得了</p>';
+											str+='<div class="imgContainer xydzp_GiftPos" style="position:relative;">';
+											// str+='<img id="resule-gift-sucImg" class="slaveImg">';
+											str+='</div>';
+											str+='<div id="resule-gift-foot" style="margin-top:-0.7rem;">';
+											// str+='<p id="resule-gift-rank"> <span class="rank gifArg awardStyle">'+res.price.Grade+'</span> </p>';
+											str+='<p id="resule-gift-rank"> <span class="rank gifArg awardStyle"></span> </p>';
+											str+='<p id="resule-gift-goods"> <span class="goods gifArg awardName">'+res.price.Title+'</span> </p>';
+											str+='</div>';
+											str+='</div>';
+											str+='</div>';
+											$('#giftbox').append(str);
+							            	return false;
+							            }
+							        }else if(res.code==3){//未中奖
+							           //按下弹起效果
+							           $(".startBtnImg").addClass("cur");
+							           $('.priceBox').addClass('cover');
+							           setTimeout(function() {
+							           	$(".startBtnImg").removeClass("cur");
+							           }, 300);
+							           if (click) {
+							           	return false;
+							           } else {
+							           	luck.speed = 100;
+										var stopnumArr=[0,3,5];
+										var stopnum=stopnumArr[Math.round(Math.random()*(stopnumArr.length-1))];
+										luck.stop(stopnum);
+							           	roll();
+										click = true;
+										$('#giftbox').empty()
+										var str="";
+										str+='<div id="faiImgBox">';
+										str+='<div class="cannotGetThePriceBox">很遗憾，没有中奖！</div>';
+										// str='<img class="abs editTarget-theGetPricePic theUnPriceImg imgPreventDefault" id="theGetPricePic" />';
+										str+='</div>';
+										$('#giftbox').append(str);
+							           	return false;
+							           }
+							        }else if(res.code==4){
+										msgTips("很遗憾，您的抽奖次数已用完！")
+										hasChance=false;
+										phone="";
+										$('#receive3').show();
+									}
+							        console.log(hasChance)
+							    }
+							})
+							
+						}else{
+							$('#receive3').show();
+						}
+					}else{
+					  msgTips("很遗憾，本次活动已结束！")
+					}
+				});
+			};
+			function showRule() {
+				$('#poupInfoBox').fadeToggle();
+				recolist()
+				
+			}
+			function guizhe(){
+				$.ajax({
+				    type: "POST",
+				    url: "http://h5api.wtvxin.com/api/LotteryDraw/activitygz?activityId="+activityId,
+				    data: {
+				        // id:2
+				    },
+				    // dataType:"json",
+				    success: function (res) {
+				        if(res.code==0){
+				            $('#rankBox .rulesbox').append(res.Content)
+				        }
+				    }
+				})
+			}
+			function recolist(){
+				phone=$("#phone").val()
+				$.ajax({
+				    type: "POST",
+				    url: "http://h5api.wtvxin.com/api/LotteryDraw/activityzjlb?moblie="+phone+"&activityId="+activityId,
+				    data: {
+				        // activityId:2,
+				        //mobile:"15868306120"
+				    },
+				    // dataType:"json",
+				    success: function (res) {
+				        // if(res.code==0){
+				        //     res.ct.forEach(item => {
+				        //         item.Addtime=item.Addtime.replace(/T/g, " ").substr(0,19)
+				        //         let shopItem="<div class='item'><span>"+item.Jpname+"</span><span>"+item.Addtime+"</span><span>"+item.Amount+"</span></div>"
+				        //         $('#awardBox .trophyList').append(shopItem)
+				        //     });
+				        // }else{
+				        //     let shopItem="<p class='item'>您目前暂无奖品，马上去试试手气吧！</p>"
+				        //     $('#awardBox .trophyList').append(shopItem)
+						// }
+						let html=""
+						if(res.code==0){
+							$('.trophyList').empty()
+							res.ct.forEach(item => {
+								item.Addtime=item.Addtime.replace(/T/g, " ").substr(0,19)
+								html += '<tr>';
+								html += '<td>' + item.Jpname + '</td>';
+								html += '<td>' + item.Addtime + '</td>';
+								html += '<td>' + item.Amount + '</td>';
+								html += '</tr>';
+							});
+							$('.trophyList').append(html)
+						}else{
+							$('.trophyList').empty()
+							let html="<p class='item'>您目前暂无奖品，马上去试试手气吧！</p>"
+							$('.trophyList').append(html)
+						}
+				    }
+				})
+			}
+			$(function(){
+				$('#resule-gift-buttonMenu-bottom').click(function(){
+					console.log("************")
+					// window.location.reload();
+					$(".resuleBox,#resule-gift-box").hide();
+				})
+				//关闭
+				$('.poupClose').click(function(){
+					$('#poupInfoBox').hide();
+				})
+				//tab切换
+				guizhe();
+				recolist();
+				$('.poupTitleBox .poupTitleMune').click(function() {
+					var that = $(this);
+					var index = $(that).index();
+					$(that).addClass('checked').siblings().removeClass('checked');
+					$(that).parents('#poupInfoBox').find('.popTabBox > div').eq(index).fadeIn().siblings().hide();
+				});
+				$("#prizeBtn").click(function(){
+				    if(phone==""){
+				        $('#receive3').show();
+					}
+					recolist();
+				});
+				
+			})
+			//图形验证码
+			function show(show_num){
+            // show_num = 4
+            console.log(show_num.toString().length,"//////////////")
+            // var canvas_width=$("#canvas").width();
+            // var canvas_height=$("#canvas").height();
+            var canvas=document.getElementById("canvas");
+            var context=canvas.getContext("2d");
+            canvas.width=canvas_width;
+
+            //获取屏幕的宽度
+            var clientWidth = document.documentElement.clientWidth;
+            console.log(clientWidth,"clientWidth/////")
+            var canvas_width = Math.floor(clientWidth*200/1100);
+            var canvas_height = Math.floor(clientWidth*200/2500);
+            canvas.setAttribute('width',canvas_width+'px');
+            canvas.setAttribute('height',canvas_height+'px');
+            canvas.width=canvas_width;
+            console.log("111111")
+            context.fillStyle="rgba(100, 40, 40, 0.3)";
+            context.fillRect(0,0,canvas_width,canvas_height);
+            console.log("2222222")
+            var font = 0
+            font = Math.floor(clientWidth*200/4000)
+            for(var i=0;i<show_num.toString().length;i++){
+                console.log(i,"i///////////")
+                var deg=Math.random()*30*Math.PI/180;
+                var txt=show_num.toString().charAt(i);
+                console.log(txt,"txt")
+                // var x=i*18+10;//文字在canvas上x坐标
+                 var x=i*font+5;//文字在canvas上x坐标
+                var y=Math.random()*3;//文字在canvas上y坐标
+                
+                // context.font="bold 18px 微软雅黑";
+                context.font="bold"+" "+ font+"px"+" 微软雅黑";
+                context.translate(x,y);
+                context.rotate(deg);
+                
+                context.fillStyle=randomColor();
+                // context.fillStyle="#ff0000";
+                context.fillText(txt,0,font);
+        
+                context.rotate(-deg);
+                context.translate(-x,-y);        
+            }
+        
+            for(var i=0;i<=4;i++){
+                //验证码上显示线条
+                context.strokeStyle=randomColor();
+                context.beginPath();
+                context.moveTo(Math.random()*canvas_width,Math.random()*canvas_height);
+                context.lineTo(Math.random()*canvas_width,Math.random()*canvas_height);
+                context.stroke();
+            }
+        
+            for(var i=0;i<=30;i++){
+                //验证码上显示小点
+                context.strokeStyle=randomColor();
+                context.beginPath();
+                var x=Math.random()*canvas_width;
+                var y=Math.random()*canvas_height;
+                context.moveTo(x,y);
+                context.lineTo(x+1,y+1);
+                context.stroke();
+            }
+        
+        }
+        function randomColor(){
+            //得到随机的颜色值
+            var r=Math.floor(Math.random()*256);
+            var g=Math.floor(Math.random()*256);
+            var b=Math.floor(Math.random()*256);
+            return "rgb("+r+","+g+","+b+")"
+        }
+        //发送验证码
+        $(".code-sj").click(function(){
+            console.log("9999999")
+            curCount1 = 59;
+            phone=$("#phone").val()
+            var r_phone = /^[1]+\d{10}/;
+            if (phone == "") {
+                msgTips("手机号不能为空");
+                return false;
+            }
+            if (!r_phone.test(phone)) {
+                msgTips(" 请输入正确的手机号");
+                return false;
+            }
+            //设置button效果，开始计时
+            $(".code-sj").attr("disabled", "true");
+            $(".code-sj").html(+curCount1 + "秒再获取");
+            InterValObj1 = window.setInterval(SetRemainTime1, 1000); //启动计时器，1秒执行一次
+            //向后台发送处理数据
+            getSmCode()
+
+        });
+        function SetRemainTime1(){
+            if(curCount1 == 1){
+                window.clearInterval(InterValObj1); //停止计时器
+                $(".code-sj").removeAttr("disabled"); //启用按钮
+                $(".code-sj").text("重新发送");
+            }else{
+                console.log(curCount1,"ppppppp")
+                curCount1--;
+                $(".code-sj").text(+curCount1 + "秒再获取");
+            }
+        }
+        function getSmCode(){
+            $.ajax({
+                type: "POST",
+                url: "http://h5api.wtvxin.com/api/JoinActivities/GetSms?mobile="+phone+"&activityId="+activityId,
+                // data: {
+                //     mobile:"15927443397",
+                //     shopid:2
+                // },
+                success: function (res) {
+                    console.log(res)
+                    if(res.code==1){
+                        code=res.data;
+                        msgTips("获取成功")
+                    }else{
+                        msgTips("")
+                    }
+                }
+            })
+        }
+			
+		</script>
+		
+	</body>
+</html>
